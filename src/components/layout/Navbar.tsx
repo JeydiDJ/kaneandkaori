@@ -1,4 +1,4 @@
-﻿ "use client";
+﻿"use client";
 
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ export function Navbar() {
           <Link href={routes.products}>Shop</Link>
           <Link href={routes.cart} className="inline-flex items-center gap-2">
             Cart
-            <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-[var(--accent)] px-2 py-0.5 text-xs font-semibold text-[var(--accent-contrast)]">
+            <span suppressHydrationWarning className="inline-flex min-w-6 items-center justify-center rounded-full bg-[var(--accent)] px-2 py-0.5 text-xs font-semibold text-[var(--accent-contrast)]">
               {itemCount}
             </span>
           </Link>
