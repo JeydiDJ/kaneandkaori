@@ -1,0 +1,56 @@
+﻿"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { getSupabaseBrowserClient } from "@/lib/supabase";
+import { mapProductRow } from "@/lib/supabase-mappers";
+import { formatPrice } from "@/lib/utils";
+import type { Product } from "@/types/product";
+
+export default function AdminProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+
+    async function load() {
+      const { data } = await supabase
+        .from("products")
+        .select("*")
+        .order("featured", { ascending: false })
+        .order("created_at", { ascending: false });
+
+      setProducts((data ?? []).map((row) => mapProductRow(row)));
+    }
+
+    void load();
+  }, []);
+
+  return (
+    <div className="grid gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Catalog</p>
+          <h1 className="display-font mt-3 text-5xl">Manage products</h1>
+        </div>
+        <Link href="/studio/products/create" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)]">Add product</Link>
+      </div>
+      <div className="grid gap-4">
+        {products.map((product) => (
+          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/70 bg-white/85 p-5 md:grid-cols-[100px_1fr_auto] md:items-center">
+            <div className="relative aspect-square overflow-hidden rounded-[1.25rem]">
+              <Image src={product.image || "/next.svg"} alt={product.name} fill className="object-cover" />
+            </div>
+            <div>
+              <p className="text-xl font-semibold">{product.name}</p>
+              <p className="mt-2 text-sm text-[var(--muted)]">{product.category} - {formatPrice(product.price)} - Stock {product.inventory}</p>
+            </div>
+            <Link href={`/studio/products/edit/${product.id}`} className="rounded-full border border-[var(--border)] px-4 py-3 text-sm font-semibold">Edit</Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

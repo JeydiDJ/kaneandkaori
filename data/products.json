@@ -1,0 +1,44 @@
+[
+  {
+    "id": "midnight-bloom",
+    "name": "Midnight Bloom",
+    "slug": "midnight-bloom",
+    "description": "A velvety floral signature with jasmine, plum skin, and dark amber. Designed to feel intimate, elegant, and memorable.",
+    "price": 96,
+    "inventory": 18,
+    "featured": true,
+    "notes": ["Jasmine", "Plum", "Amber"],
+    "category": "Floral Amber",
+    "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80",
+    "createdAt": "2026-03-22T00:00:00.000Z",
+    "updatedAt": "2026-03-22T00:00:00.000Z"
+  },
+  {
+    "id": "silk-citrus",
+    "name": "Silk Citrus",
+    "slug": "silk-citrus",
+    "description": "Sparkling bergamot and neroli soften into white tea and cashmere musk for an effortless daytime scent.",
+    "price": 82,
+    "inventory": 24,
+    "featured": true,
+    "notes": ["Bergamot", "Neroli", "White Tea"],
+    "category": "Citrus Musk",
+    "image": "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&q=80",
+    "createdAt": "2026-03-22T00:00:00.000Z",
+    "updatedAt": "2026-03-22T00:00:00.000Z"
+  },
+  {
+    "id": "cedar-veil",
+    "name": "Cedar Veil",
+    "slug": "cedar-veil",
+    "description": "A smooth woody blend of cedar, iris, and smoked vanilla with a modern, grounded finish.",
+    "price": 110,
+    "inventory": 12,
+    "featured": false,
+    "notes": ["Cedar", "Iris", "Vanilla"],
+    "category": "Woody",
+    "image": "https://images.unsplash.com/photo-1615634262417-6c56d2855cf0?auto=format&fit=crop&w=900&q=80",
+    "createdAt": "2026-03-22T00:00:00.000Z",
+    "updatedAt": "2026-03-22T00:00:00.000Z"
+  }
+]
