@@ -10,41 +10,71 @@ import { formatOrderReference, formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
 export function AdminOrderDetails({ order }: { order: Order }) {
+  const [currentOrder, setCurrentOrder] = useState(order);
   const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   async function updateStatus(status: Order["status"]) {
     setSaving(true);
+    setMessage(null);
     const supabase = getSupabaseBrowserClient();
-    await supabase.from("orders").update({ status }).eq("id", order.id);
-    window.location.reload();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const response = await fetch(`/api/orders/${currentOrder.id}/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.access_token ?? ""}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    const data = (await response.json()) as { error?: string };
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Could not update the order status.");
+      setSaving(false);
+      return;
+    }
+
+    setCurrentOrder((existing) => ({ ...existing, status }));
+    setMessage(`Order ${formatOrderReference(currentOrder.id)} marked as ${status}.`);
+    setSaving(false);
   }
 
   return (
     <div className="grid gap-6">
+      {message ? (
+        <div className="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 text-sm text-[var(--muted)]">
+          {message}
+        </div>
+      ) : null}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order detail</p>
-          <h1 className="display-font mt-3 text-5xl">{order.customerName}</h1>
-          <p className="mt-3 text-[var(--muted)]">{order.email} - {order.phone}</p>
-          <p className="mt-2 text-sm font-semibold text-[var(--accent)]">Reference: {formatOrderReference(order.id)}</p>
+          <h1 className="display-font mt-3 text-5xl">{currentOrder.customerName}</h1>
+          <p className="mt-3 text-[var(--muted)]">{currentOrder.email} - {currentOrder.phone}</p>
+          <p className="mt-2 text-sm font-semibold text-[var(--accent)]">Reference: {formatOrderReference(currentOrder.id)}</p>
         </div>
-        <OrderStatusBadge status={order.status} />
+        <OrderStatusBadge status={currentOrder.status} />
       </div>
       <div className="grid gap-4 rounded-[2rem] border border-white/70 bg-white/85 p-6 md:grid-cols-2">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-[var(--muted)]">Delivery</p>
-          <p className="mt-3 leading-7 text-[var(--foreground)]">{order.address}<br />{order.barangay ? `${order.barangay}, ` : ""}{order.city}, {order.province} {order.postalCode}<br />{order.country}</p>
+          <p className="mt-3 leading-7 text-[var(--foreground)]">{currentOrder.address}<br />{currentOrder.barangay ? `${currentOrder.barangay}, ` : ""}{currentOrder.city}, {currentOrder.province} {currentOrder.postalCode}<br />{currentOrder.country}</p>
         </div>
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-[var(--muted)]">Notes</p>
-          <p className="mt-3 leading-7 text-[var(--foreground)]">{order.notes || "No customer notes."}</p>
-          <p className="mt-4 text-sm text-[var(--muted)]">Payment: {order.paymentMethod}{order.paymentReference ? ` (${order.paymentReference})` : ""}</p>
+          <p className="mt-3 leading-7 text-[var(--foreground)]">{currentOrder.notes || "No customer notes."}</p>
+          <p className="mt-4 text-sm text-[var(--muted)]">Payment: {currentOrder.paymentMethod}{currentOrder.paymentReference ? ` (${currentOrder.paymentReference})` : ""}</p>
         </div>
       </div>
       <div className="rounded-[2rem] border border-white/70 bg-white/85 p-6">
         <p className="text-sm uppercase tracking-[0.25em] text-[var(--muted)]">Items</p>
         <div className="mt-4 space-y-4">
-          {order.items.map((item) => (
+          {currentOrder.items.map((item) => (
             <div key={`${item.productId}-${item.name}`} className="flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4 last:border-none">
               <div className="flex items-center gap-4">
                 {item.image ? (
@@ -65,7 +95,7 @@ export function AdminOrderDetails({ order }: { order: Order }) {
         </div>
         <div className="mt-6 flex justify-between text-lg font-semibold">
           <span>Total</span>
-          <span>{formatPrice(order.total)}</span>
+          <span>{formatPrice(currentOrder.total)}</span>
         </div>
       </div>
       <div className="flex flex-wrap gap-3">

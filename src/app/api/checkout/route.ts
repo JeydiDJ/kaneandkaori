@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { sendNewOrderNotification } from "@/lib/email";
+import { toOrderEmailData } from "@/lib/order-email-data";
 import { createSupabaseAdminClient } from "@/lib/supabase";
 
 type CheckoutItem = {
@@ -56,7 +58,9 @@ export async function POST(request: Request) {
         shipping_fee: 0,
         total_amount: subtotal,
       })
-      .select("id")
+      .select(
+        "id, customer_name, email, phone, address_line, barangay, city_municipality, province, postal_code, country, payment_method, payment_reference, notes, total_amount",
+      )
       .single();
 
     if (orderError || !order) {
@@ -66,15 +70,17 @@ export async function POST(request: Request) {
       );
     }
 
+    const orderItems = body.items.map((item) => ({
+      order_id: order.id,
+      product_id: item.productId || null,
+      product_name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      line_total: item.price * item.quantity,
+    }));
+
     const { error: itemsError } = await supabase.from("order_items").insert(
-      body.items.map((item) => ({
-        order_id: order.id,
-        product_id: item.productId || null,
-        product_name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        line_total: item.price * item.quantity,
-      })),
+      orderItems,
     );
 
     if (itemsError) {
@@ -82,6 +88,21 @@ export async function POST(request: Request) {
         { error: itemsError.message, orderId: order.id },
         { status: 500 },
       );
+    }
+
+    try {
+      await sendNewOrderNotification(
+        toOrderEmailData({
+          ...order,
+          order_items: orderItems.map((item) => ({
+            product_name: item.product_name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      );
+    } catch (error) {
+      console.error("Failed to send new order notification", error);
     }
 
     return NextResponse.json({
