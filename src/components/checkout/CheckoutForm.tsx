@@ -7,30 +7,40 @@ import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { useCart } from "@/hooks/useCart";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
-import { formatPrice } from "@/lib/utils";
+import { formatOrderReference, formatPrice } from "@/lib/utils";
+
+type ReceiptState = {
+  orderId: string;
+  customerName: string;
+  paymentMethod: string;
+  total: number;
+};
 
 export function CheckoutForm() {
   const router = useRouter();
   const { items, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [receipt, setReceipt] = useState<ReceiptState | null>(null);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setMessage(null);
+    setReceipt(null);
 
     const formData = new FormData(event.currentTarget);
     const supabase = getSupabaseBrowserClient();
-    const shippingFee = Number(formData.get("shippingFee") ?? 0);
     const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const totalAmount = subtotal + shippingFee;
+    const totalAmount = subtotal;
+    const paymentMethod = String(formData.get("paymentMethod") ?? "GCash");
+    const customerName = String(formData.get("customerName") ?? "");
 
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
-        customer_name: String(formData.get("customerName") ?? ""),
+        customer_name: customerName,
         email: String(formData.get("email") ?? ""),
         phone: String(formData.get("phone") ?? ""),
         address_line: String(formData.get("address") ?? ""),
@@ -39,11 +49,11 @@ export function CheckoutForm() {
         province: String(formData.get("province") ?? ""),
         postal_code: String(formData.get("postalCode") ?? ""),
         country: String(formData.get("country") ?? "Philippines"),
-        payment_method: String(formData.get("paymentMethod") ?? "GCash"),
+        payment_method: paymentMethod,
         payment_reference: String(formData.get("paymentReference") ?? ""),
         notes: String(formData.get("notes") ?? ""),
         subtotal,
-        shipping_fee: shippingFee,
+        shipping_fee: 0,
         total_amount: totalAmount,
       })
       .select("id")
@@ -73,10 +83,59 @@ export function CheckoutForm() {
     }
 
     clearCart();
-    setMessage("Order placed successfully. Your friend can review it in the admin dashboard.");
+    setReceipt({
+      orderId: order.id,
+      customerName,
+      paymentMethod,
+      total: totalAmount,
+    });
+    setMessage("Order placed successfully. Your order has been forwarded to the studio dashboard.");
     event.currentTarget.reset();
     setLoading(false);
     router.refresh();
+  }
+
+  if (receipt) {
+    return (
+      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+        <section className="grid gap-5 rounded-[2rem] border border-white/70 bg-white/85 p-8">
+          <div>
+            <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order receipt</p>
+            <h2 className="display-font mt-3 text-4xl">Thank you for your order</h2>
+            <p className="mt-3 text-[var(--muted)]">
+              Please save your reference number. Your friend will see this same receipt in the studio dashboard.
+            </p>
+          </div>
+          <div className="grid gap-4 rounded-[1.75rem] bg-[var(--surface)] p-5">
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--muted)]">Reference</span>
+              <span className="font-semibold">{formatOrderReference(receipt.orderId)}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--muted)]">Customer</span>
+              <span className="font-semibold">{receipt.customerName}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--muted)]">Payment method</span>
+              <span className="font-semibold">{receipt.paymentMethod}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--muted)]">Amount</span>
+              <span className="font-semibold">{formatPrice(receipt.total)}</span>
+            </div>
+          </div>
+          {message ? <p className="text-sm text-[var(--muted)]">{message}</p> : null}
+        </section>
+        <aside className="rounded-[2rem] border border-white/70 bg-white/80 p-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">What happens next</p>
+          <div className="mt-4 space-y-3 text-sm text-[var(--muted)]">
+            <p>Your order is now visible in the private studio orders dashboard.</p>
+            <p>Your friend can confirm, pack, ship, and deliver the order from there.</p>
+            <p>Use your reference number if you need to ask about the order.</p>
+          </div>
+        </aside>
+      </div>
+    );
   }
 
   if (items.length === 0) {
@@ -99,7 +158,6 @@ export function CheckoutForm() {
           <Input label="City" name="city" required />
           <Input label="Province" name="province" required />
           <Input label="Postal code" name="postalCode" required />
-          <Input label="Shipping fee" name="shippingFee" type="number" min="0" defaultValue="0" required />
         </div>
         <Input label="Street address" name="address" required />
         <div className="grid gap-4 md:grid-cols-2">

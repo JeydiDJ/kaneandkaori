@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
-import { formatPrice } from "@/lib/utils";
+import { formatOrderReference, formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
 export function OrderTable({ orders }: { orders: Order[] }) {
@@ -24,6 +24,7 @@ export function OrderTable({ orders }: { orders: Order[] }) {
       <table className="min-w-full text-left text-sm">
         <thead className="bg-[var(--surface)] text-[var(--muted)]">
           <tr>
+            <th className="px-5 py-4">Reference</th>
             <th className="px-5 py-4">Customer</th>
             <th className="px-5 py-4">Total</th>
             <th className="px-5 py-4">Status</th>
@@ -34,6 +35,7 @@ export function OrderTable({ orders }: { orders: Order[] }) {
         <tbody>
           {orders.map((order) => (
             <tr key={order.id} className="border-t border-[var(--border)] align-top">
+              <td className="px-5 py-4 font-semibold">{formatOrderReference(order.id)}</td>
               <td className="px-5 py-4">
                 <p className="font-semibold text-[var(--foreground)]">{order.customerName}</p>
                 <p className="text-[var(--muted)]">{order.email}</p>

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { Button } from "@/components/ui/Button";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
-import { formatPrice } from "@/lib/utils";
+import { formatOrderReference, formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
 export function AdminOrderDetails({ order }: { order: Order }) {
@@ -26,6 +26,7 @@ export function AdminOrderDetails({ order }: { order: Order }) {
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order detail</p>
           <h1 className="display-font mt-3 text-5xl">{order.customerName}</h1>
           <p className="mt-3 text-[var(--muted)]">{order.email} - {order.phone}</p>
+          <p className="mt-2 text-sm font-semibold text-[var(--accent)]">Reference: {formatOrderReference(order.id)}</p>
         </div>
         <OrderStatusBadge status={order.status} />
       </div>

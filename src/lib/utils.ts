@@ -1,9 +1,14 @@
-export function formatPrice(value: number) {
-  return new Intl.NumberFormat("en-US", {
+﻿export function formatPrice(value: number) {
+  return new Intl.NumberFormat("en-PH", {
     style: "currency",
-    currency: "USD",
+    currency: "PHP",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+export function formatOrderReference(orderId: string) {
+  const compact = orderId.replace(/-/g, "").slice(0, 8).toUpperCase();
+  return `KK-${compact}`;
 }
 
 export function slugify(value: string) {
