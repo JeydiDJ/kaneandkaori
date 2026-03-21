@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { useCart } from "@/hooks/useCart";
-import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { formatOrderReference, formatPrice } from "@/lib/utils";
 
 type ReceiptState = {
@@ -29,68 +28,57 @@ export function CheckoutForm() {
     setLoading(true);
     setMessage(null);
     setReceipt(null);
+    const form = event.currentTarget;
 
-    const formData = new FormData(event.currentTarget);
-    const supabase = getSupabaseBrowserClient();
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const totalAmount = subtotal;
+    const formData = new FormData(form);
     const paymentMethod = String(formData.get("paymentMethod") ?? "GCash");
     const customerName = String(formData.get("customerName") ?? "");
 
-    const { data: order, error: orderError } = await supabase
-      .from("orders")
-      .insert({
-        customer_name: customerName,
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerName,
         email: String(formData.get("email") ?? ""),
         phone: String(formData.get("phone") ?? ""),
-        address_line: String(formData.get("address") ?? ""),
+        address: String(formData.get("address") ?? ""),
         barangay: String(formData.get("barangay") ?? ""),
-        city_municipality: String(formData.get("city") ?? ""),
+        city: String(formData.get("city") ?? ""),
         province: String(formData.get("province") ?? ""),
-        postal_code: String(formData.get("postalCode") ?? ""),
+        postalCode: String(formData.get("postalCode") ?? ""),
         country: String(formData.get("country") ?? "Philippines"),
-        payment_method: paymentMethod,
-        payment_reference: String(formData.get("paymentReference") ?? ""),
+        paymentMethod,
+        paymentReference: String(formData.get("paymentReference") ?? ""),
         notes: String(formData.get("notes") ?? ""),
-        subtotal,
-        shipping_fee: 0,
-        total_amount: totalAmount,
-      })
-      .select("id")
-      .single();
+        items,
+      }),
+    });
 
-    if (orderError || !order) {
-      setMessage(orderError?.message ?? "We could not place the order. Please try again.");
-      setLoading(false);
-      return;
-    }
+    const data = (await response.json()) as {
+      error?: string;
+      orderId?: string;
+      total?: number;
+      paymentMethod?: string;
+      customerName?: string;
+    };
 
-    const { error: itemsError } = await supabase.from("order_items").insert(
-      items.map((item) => ({
-        order_id: order.id,
-        product_id: item.productId || null,
-        product_name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        line_total: item.price * item.quantity,
-      })),
-    );
-
-    if (itemsError) {
-      setMessage(itemsError.message);
+    if (!response.ok || !data.orderId) {
+      setMessage(data.error ?? "We could not place the order. Please try again.");
       setLoading(false);
       return;
     }
 
     clearCart();
     setReceipt({
-      orderId: order.id,
-      customerName,
-      paymentMethod,
-      total: totalAmount,
+      orderId: data.orderId,
+      customerName: data.customerName ?? customerName,
+      paymentMethod: data.paymentMethod ?? paymentMethod,
+      total: data.total ?? total,
     });
     setMessage("Order placed successfully. Your order has been forwarded to the studio dashboard.");
-    event.currentTarget.reset();
+    form.reset();
     setLoading(false);
     router.refresh();
   }
