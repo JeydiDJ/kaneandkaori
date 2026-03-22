@@ -1,7 +1,9 @@
 ﻿"use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
+import logo from "@/assets/kaneandkaori-logo.png";
 import { routes } from "@/constants/routes";
 import { useCart } from "@/hooks/useCart";
 
@@ -11,8 +13,11 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/50 bg-[rgba(247,241,232,0.82)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link href={routes.home} className="text-lg font-semibold tracking-[0.28em] uppercase">
-          Kane & Kaori
+        <Link href={routes.home} className="inline-flex items-center gap-3" aria-label="Kane and Kaori home">
+          <Image src={logo} alt="Kane & Kaori" className="h-14 w-auto md:h-16" priority />
+          <span className="text-lg font-semibold tracking-[0.28em] uppercase text-[var(--foreground)]">
+            Kane & Kaori
+          </span>
         </Link>
         <nav className="flex items-center gap-5 text-sm text-[var(--muted)]">
           <Link href={routes.products}>Shop</Link>
