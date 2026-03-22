@@ -77,7 +77,7 @@ export function CheckoutForm() {
       paymentMethod: data.paymentMethod ?? paymentMethod,
       total: data.total ?? total,
     });
-    setMessage("Order placed successfully. Your order has been forwarded to the studio dashboard.");
+    setMessage("Order placed successfully. We have received your request and will begin preparing it.");
     form.reset();
     setLoading(false);
     router.refresh();
@@ -91,7 +91,7 @@ export function CheckoutForm() {
             <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order receipt</p>
             <h2 className="display-font mt-3 text-4xl">Thank you for your order</h2>
             <p className="mt-3 text-[var(--muted)]">
-              Please save your reference number. Your friend will see this same receipt in the studio dashboard.
+              Please save your reference number so we can assist you quickly with any follow-up.
             </p>
           </div>
           <div className="grid gap-4 rounded-[1.75rem] bg-[var(--surface)] p-5">
@@ -117,8 +117,8 @@ export function CheckoutForm() {
         <aside className="rounded-[2rem] border border-white/70 bg-white/80 p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">What happens next</p>
           <div className="mt-4 space-y-3 text-sm text-[var(--muted)]">
-            <p>Your order is now visible in the private studio orders dashboard.</p>
-            <p>Your friend can confirm, pack, ship, and deliver the order from there.</p>
+            <p>Your order has been received by our studio team.</p>
+            <p>We will confirm, prepare, and arrange delivery with care.</p>
             <p>Use your reference number if you need to ask about the order.</p>
           </div>
         </aside>

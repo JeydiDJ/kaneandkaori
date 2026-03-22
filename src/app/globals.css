@@ -59,6 +59,50 @@ img {
   padding: 3rem 1.5rem;
 }
 
+.kk-orb {
+  pointer-events: none;
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(36px);
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.kk-orb-1 {
+  right: -6rem;
+  top: 2rem;
+  height: 16rem;
+  width: 16rem;
+  background: radial-gradient(circle, rgba(223, 180, 137, 0.55) 0%, rgba(223, 180, 137, 0) 70%);
+}
+
+.kk-orb-2 {
+  left: -6rem;
+  top: 17rem;
+  height: 18rem;
+  width: 18rem;
+  background: radial-gradient(circle, rgba(198, 133, 98, 0.4) 0%, rgba(198, 133, 98, 0) 72%);
+}
+
+.kk-fade-up {
+  animation: kkFadeUp 700ms ease-out both;
+}
+
+.kk-fade-up-delayed {
+  animation: kkFadeUp 900ms ease-out both;
+}
+
+@keyframes kkFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (min-width: 768px) {
   .section-wrap {
     padding: 4.5rem 2rem;

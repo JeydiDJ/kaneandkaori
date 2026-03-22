@@ -27,8 +27,8 @@ export default function AdminDashboardPage() {
   return (
     <div className="grid gap-6">
       <div>
-        <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Admin dashboard</p>
-        <h1 className="display-font mt-3 text-5xl">Manage catalog and orders</h1>
+        <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Studio dashboard</p>
+        <h1 className="display-font mt-3 text-5xl">Manage catalog and customer orders</h1>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-[2rem] border border-white/70 bg-white/85 p-6">
@@ -47,11 +47,11 @@ export default function AdminDashboardPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <Link href="/studio/products/create" className="rounded-[2rem] border border-white/70 bg-white/80 p-6">
           <p className="text-xl font-semibold">Add a new fragrance</p>
-          <p className="mt-2 text-[var(--muted)]">Create products, upload images, and control featured inventory.</p>
+          <p className="mt-2 text-[var(--muted)]">Create listings, upload images, and update featured products.</p>
         </Link>
         <Link href="/studio/orders" className="rounded-[2rem] border border-white/70 bg-white/80 p-6">
           <p className="text-xl font-semibold">Review customer orders</p>
-          <p className="mt-2 text-[var(--muted)]">See guest checkout submissions and update their status.</p>
+          <p className="mt-2 text-[var(--muted)]">Track new requests and update fulfillment status.</p>
         </Link>
       </div>
     </div>

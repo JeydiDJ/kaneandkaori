@@ -24,7 +24,7 @@ export function AdminSidebar() {
 
   return (
     <aside className="rounded-[2rem] border border-white/70 bg-white/85 p-5">
-      <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Admin</p>
+      <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Studio</p>
       <nav className="mt-5 grid gap-2 text-sm">
         {links.map((link) => (
           <Link
