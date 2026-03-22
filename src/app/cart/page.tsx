@@ -13,10 +13,10 @@ export default function CartPage() {
     <section className="section-wrap">
       <div className="mb-8 max-w-2xl">
         <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Cart</p>
-        <h1 className="display-font mt-3 text-5xl">Review the order before checkout</h1>
+        <h1 className="display-font mt-3 text-4xl md:text-5xl">Review the order before checkout</h1>
       </div>
       {items.length === 0 ? (
-        <div className="rounded-[2rem] border border-dashed border-[var(--border)] bg-white/78 p-10 text-center shadow-[0_16px_45px_rgba(0,0,0,0.08)]">
+        <div className="rounded-[2rem] border border-dashed border-[var(--border)] bg-white/78 p-7 text-center shadow-[0_16px_45px_rgba(0,0,0,0.08)] sm:p-10">
           <p className="text-lg text-[var(--muted)]">The cart is empty right now.</p>
           <Link href="/products" className="mt-4 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_12px_26px_rgba(0,0,0,0.28)] transition hover:brightness-95">Browse products</Link>
         </div>
@@ -33,4 +33,5 @@ export default function CartPage() {
     </section>
   );
 }
+
 

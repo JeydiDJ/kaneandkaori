@@ -57,8 +57,8 @@ export function OrderTable({ orders }: { orders: Order[] }) {
           {message}
         </div>
       ) : null}
-      <div className="overflow-hidden rounded-[2rem] border border-white/75 bg-white/88 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
-        <table className="min-w-full text-left text-sm">
+      <div className="overflow-x-auto rounded-[2rem] border border-white/75 bg-white/88 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
+        <table className="min-w-[760px] text-left text-sm">
           <thead className="bg-[var(--surface)]/78 text-[var(--muted)]">
             <tr>
               <th className="px-5 py-4">Reference</th>

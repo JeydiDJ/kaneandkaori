@@ -60,7 +60,7 @@ img {
   margin: 0 auto;
   width: 100%;
   max-width: 80rem;
-  padding: 3rem 1.5rem;
+  padding: 2.25rem 1rem;
 }
 
 .kk-panel {
@@ -382,5 +382,11 @@ img {
 @media (min-width: 768px) {
   .section-wrap {
     padding: 4.5rem 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .kk-foundation {
+    min-height: 14.5rem;
   }
 }

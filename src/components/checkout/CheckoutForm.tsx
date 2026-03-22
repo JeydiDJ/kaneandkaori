@@ -86,7 +86,7 @@ export function CheckoutForm() {
   if (receipt) {
     return (
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-        <section className="grid gap-5 rounded-[2rem] border border-white/75 bg-white/86 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.10)]">
+        <section className="grid gap-5 rounded-[2rem] border border-white/75 bg-white/86 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.10)] sm:p-8">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order receipt</p>
             <h2 className="display-font mt-3 text-4xl">Thank you for your order</h2>

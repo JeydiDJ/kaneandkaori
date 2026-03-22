@@ -28,7 +28,7 @@ export default function AdminDashboardPage() {
     <div className="grid gap-6">
       <div>
         <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Studio dashboard</p>
-        <h1 className="display-font mt-3 text-5xl">Manage catalog and customer orders</h1>
+        <h1 className="display-font mt-3 text-4xl md:text-5xl">Manage catalog and customer orders</h1>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
@@ -57,4 +57,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 

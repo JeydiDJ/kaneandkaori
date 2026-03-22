@@ -54,7 +54,7 @@ export function AdminOrderDetails({ order }: { order: Order }) {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order detail</p>
-          <h1 className="display-font mt-3 text-5xl">{currentOrder.customerName}</h1>
+          <h1 className="display-font mt-3 text-4xl md:text-5xl">{currentOrder.customerName}</h1>
           <p className="mt-3 text-[var(--muted)]">{currentOrder.email} - {currentOrder.phone}</p>
           <p className="mt-2 text-sm font-semibold text-[var(--accent)]">Reference: {formatOrderReference(currentOrder.id)}</p>
         </div>

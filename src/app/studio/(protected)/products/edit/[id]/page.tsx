@@ -33,9 +33,10 @@ export default function EditProductPage() {
     <div className="grid gap-6">
       <div>
         <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Catalog</p>
-        <h1 className="display-font mt-3 text-5xl">Edit product</h1>
+        <h1 className="display-font mt-3 text-4xl md:text-5xl">Edit product</h1>
       </div>
       <ProductForm product={product} />
     </div>
   );
 }
+

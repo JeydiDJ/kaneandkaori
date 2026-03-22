@@ -46,8 +46,8 @@ export function FoundationReel() {
 
       <div className="kk-foundation-stage mt-4" key={activeItem.title}>
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">{activeItem.subtitle}</p>
-        <h3 className="display-font mt-2 text-4xl leading-tight">{activeItem.title}</h3>
-        <p className="mt-4 max-w-md text-base leading-8 text-[var(--muted)]">{activeItem.body}</p>
+        <h3 className="display-font mt-2 text-3xl leading-tight sm:text-4xl">{activeItem.title}</h3>
+        <p className="mt-4 max-w-md text-sm leading-7 text-[var(--muted)] sm:text-base sm:leading-8">{activeItem.body}</p>
       </div>
 
       <div className="mt-6 grid grid-cols-4 gap-2" aria-hidden>
@@ -63,4 +63,5 @@ export function FoundationReel() {
     </div>
   );
 }
+
 

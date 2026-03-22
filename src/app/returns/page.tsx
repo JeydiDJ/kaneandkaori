@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 export default function ReturnsPage() {
   return (
     <section className="section-wrap">
-      <div className="max-w-3xl space-y-5 rounded-[2rem] border border-white/70 bg-white/70 p-8">
+      <div className="max-w-3xl space-y-5 rounded-[2rem] border border-white/70 bg-white/70 p-6 sm:p-8">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Returns</p>
-        <h1 className="display-font text-5xl">Return Policy</h1>
+        <h1 className="display-font text-4xl md:text-5xl">Return Policy</h1>
         <ul className="space-y-3 leading-8 text-[var(--muted)]">
           <li>Returns are accepted for damaged or incorrect items reported within 48 hours of delivery.</li>
           <li>Unopened items may be eligible for exchange subject to review.</li>
@@ -21,3 +21,5 @@ export default function ReturnsPage() {
     </section>
   );
 }
+
+

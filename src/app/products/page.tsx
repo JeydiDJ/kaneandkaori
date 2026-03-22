@@ -15,10 +15,11 @@ export default async function ProductsPage() {
     <section className="section-wrap">
       <div className="mb-10 max-w-2xl">
         <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Shop</p>
-        <h1 className="display-font mt-3 text-5xl md:text-6xl">Discover the full fragrance collection</h1>
+        <h1 className="display-font mt-3 text-4xl md:text-6xl">Discover the full fragrance collection</h1>
         <p className="mt-4 text-lg leading-8 text-[var(--muted)]">Explore scents shaped by intention, memory, and everyday moments of quiet beauty.</p>
       </div>
       <ProductGrid products={products} />
     </section>
   );
 }
+

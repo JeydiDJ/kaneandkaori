@@ -18,7 +18,7 @@ const links = [
 export function Footer() {
   return (
     <footer className="mt-8 border-t border-white/55 bg-white/50">
-      <div className="mx-auto grid max-w-7xl gap-7 px-6 py-12 text-sm text-[var(--muted)] md:grid-cols-[1.2fr_0.8fr]">
+      <div className="mx-auto grid max-w-7xl gap-7 px-4 py-10 text-sm text-[var(--muted)] sm:px-6 md:grid-cols-[1.2fr_0.8fr] md:py-12">
         <div className="space-y-4">
           <Image src={logo} alt="Kane & Kaori" className="h-9 w-auto" />
           <p className="max-w-lg leading-7">
