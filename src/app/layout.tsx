@@ -9,8 +9,22 @@ import { siteConfig } from "@/constants/config";
 import { CartProvider } from "@/hooks/useCart";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: `${siteConfig.name} | Fragrance for Becoming`,
   description: siteConfig.description,
+  openGraph: {
+    title: `${siteConfig.name} | Fragrance for Becoming`,
+    description: siteConfig.description,
+    url: "/",
+    siteName: siteConfig.name,
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} | Fragrance for Becoming`,
+    description: siteConfig.description,
+  },
   icons: {
     icon: favicon.src,
     shortcut: favicon.src,

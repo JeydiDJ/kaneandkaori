@@ -1,5 +1,12 @@
+﻿import type { Metadata } from "next";
+
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { getProducts } from "@/services/productService";
+
+export const metadata: Metadata = {
+  title: "Shop Fragrances | Kane & Kaori",
+  description: "Explore the complete Kane & Kaori fragrance collection and discover scents crafted for meaning and memory.",
+};
 
 export default async function ProductsPage() {
   const products = await getProducts();

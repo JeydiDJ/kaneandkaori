@@ -154,6 +154,14 @@ export function CheckoutForm() {
         </div>
         <Textarea label="Order notes" name="notes" hint="Optional gifting or delivery notes" />
         <Button type="submit" disabled={loading}>{loading ? "Placing order..." : "Place guest order"}</Button>
+        <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-4 text-sm text-[var(--muted)]">
+          <p className="font-semibold text-[var(--foreground)]">Checkout confidence</p>
+          <ul className="mt-2 space-y-1.5">
+            <li>Order review and confirmation within 1-2 business days.</li>
+            <li>Delivery updates shared after fulfillment begins.</li>
+            <li>Support available via the Contact page with your order reference.</li>
+          </ul>
+        </div>
         {message ? <p className="text-sm text-[var(--muted)]">{message}</p> : null}
       </form>
       <aside className="rounded-[2rem] border border-white/75 bg-white/84 p-6 shadow-[0_16px_45px_rgba(0,0,0,0.08)]">

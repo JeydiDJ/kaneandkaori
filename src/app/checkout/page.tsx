@@ -1,4 +1,11 @@
+﻿import type { Metadata } from "next";
+
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
+
+export const metadata: Metadata = {
+  title: "Checkout | Kane & Kaori",
+  description: "Complete your Kane & Kaori fragrance order with secure guest checkout and delivery details.",
+};
 
 export default function CheckoutPage() {
   return (

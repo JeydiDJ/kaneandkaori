@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+﻿import type { Metadata } from "next";
+import Link from "next/link";
 
 import { FoundationReel } from "@/components/home/FoundationReel";
 import { ProductGrid } from "@/components/products/ProductGrid";
@@ -6,6 +7,12 @@ import { getFeaturedProducts } from "@/services/productService";
 
 const IKIGAI = "Ikigai (\u751f\u304d\u7532\u6590)";
 const KAIZEN = "Kaizen (\u6539\u5584)";
+
+export const metadata: Metadata = {
+  title: "Kane & Kaori | Fragrance for Becoming",
+  description:
+    "Discover purposeful fragrances inspired by Ikigai (生き甲斐) and Kaizen (改善), crafted for memory, clarity, and everyday ritual.",
+};
 
 export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
@@ -101,3 +108,5 @@ export default async function Home() {
     </div>
   );
 }
+
+
