@@ -74,7 +74,7 @@ export function ProductForm({ product }: ProductFormProps) {
   }
 
   return (
-    <form className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(106,73,53,0.1)]" onSubmit={handleSubmit}>
+    <form className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(0,0,0,0.10)]" onSubmit={handleSubmit}>
       <div className="grid gap-4 md:grid-cols-2">
         <Input label="Product name" name="name" defaultValue={product?.name} required />
         <Input label="Category" name="category" defaultValue={product?.category} required />
@@ -107,3 +107,4 @@ export function ProductForm({ product }: ProductFormProps) {
     </form>
   );
 }
+

@@ -35,11 +35,11 @@ export default function AdminProductsPage() {
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Catalog</p>
           <h1 className="display-font mt-3 text-5xl">Manage products</h1>
         </div>
-        <Link href="/studio/products/create" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_12px_26px_rgba(125,78,51,0.28)] transition hover:brightness-95">Add product</Link>
+        <Link href="/studio/products/create" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_12px_26px_rgba(0,0,0,0.28)] transition hover:brightness-95">Add product</Link>
       </div>
       <div className="grid gap-4">
         {products.map((product) => (
-          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_16px_45px_rgba(106,73,53,0.08)] md:grid-cols-[100px_1fr_auto] md:items-center">
+          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_16px_45px_rgba(0,0,0,0.08)] md:grid-cols-[100px_1fr_auto] md:items-center">
             <div className="relative aspect-square overflow-hidden rounded-[1.25rem]">
               <Image src={product.image || "/next.svg"} alt={product.name} fill className="object-cover" />
             </div>
@@ -54,3 +54,4 @@ export default function AdminProductsPage() {
     </div>
   );
 }
+

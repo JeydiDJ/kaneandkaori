@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -23,14 +23,14 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_20px_55px_rgba(106,73,53,0.1)]">
+    <aside className="rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
       <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Studio</p>
       <nav className="mt-5 grid gap-2 text-sm">
         {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className={`rounded-2xl px-4 py-3 font-medium transition ${pathname === link.href ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[0_12px_28px_rgba(125,78,51,0.25)]" : "hover:bg-[var(--surface)]/75"}`}
+            className={`rounded-2xl px-4 py-3 font-medium transition ${pathname === link.href ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[0_12px_28px_rgba(0,0,0,0.25)]" : "hover:bg-[var(--surface)]/75"}`}
           >
             {link.label}
           </Link>
@@ -42,3 +42,4 @@ export function AdminSidebar() {
     </aside>
   );
 }
+

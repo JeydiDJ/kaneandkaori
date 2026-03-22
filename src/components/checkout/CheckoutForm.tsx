@@ -86,7 +86,7 @@ export function CheckoutForm() {
   if (receipt) {
     return (
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-        <section className="grid gap-5 rounded-[2rem] border border-white/75 bg-white/86 p-8 shadow-[0_20px_60px_rgba(106,73,53,0.1)]">
+        <section className="grid gap-5 rounded-[2rem] border border-white/75 bg-white/86 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.10)]">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Order receipt</p>
             <h2 className="display-font mt-3 text-4xl">Thank you for your order</h2>
@@ -114,7 +114,7 @@ export function CheckoutForm() {
           </div>
           {message ? <p className="text-sm text-[var(--muted)]">{message}</p> : null}
         </section>
-        <aside className="rounded-[2rem] border border-white/75 bg-white/84 p-6 shadow-[0_16px_45px_rgba(106,73,53,0.08)]">
+        <aside className="rounded-[2rem] border border-white/75 bg-white/84 p-6 shadow-[0_16px_45px_rgba(0,0,0,0.08)]">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">What happens next</p>
           <div className="mt-4 space-y-3 text-sm text-[var(--muted)]">
             <p>Your order has been received by our studio team.</p>
@@ -136,7 +136,7 @@ export function CheckoutForm() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-      <form className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/86 p-6 shadow-[0_20px_60px_rgba(106,73,53,0.1)]" onSubmit={handleSubmit}>
+      <form className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/86 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.10)]" onSubmit={handleSubmit}>
         <div className="grid gap-4 md:grid-cols-2">
           <Input label="Full name" name="customerName" required />
           <Input label="Email" name="email" type="email" required />
@@ -156,7 +156,7 @@ export function CheckoutForm() {
         <Button type="submit" disabled={loading}>{loading ? "Placing order..." : "Place guest order"}</Button>
         {message ? <p className="text-sm text-[var(--muted)]">{message}</p> : null}
       </form>
-      <aside className="rounded-[2rem] border border-white/75 bg-white/84 p-6 shadow-[0_16px_45px_rgba(106,73,53,0.08)]">
+      <aside className="rounded-[2rem] border border-white/75 bg-white/84 p-6 shadow-[0_16px_45px_rgba(0,0,0,0.08)]">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Order review</p>
         <div className="mt-4 space-y-4">
           {items.map((item) => (
@@ -177,3 +177,4 @@ export function CheckoutForm() {
     </div>
   );
 }
+

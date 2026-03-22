@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import Link from "next/link";
 
 import { formatPrice } from "@/lib/utils";
@@ -6,7 +6,7 @@ import type { Product } from "@/types/product";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="group overflow-hidden rounded-[2rem] border border-white/75 bg-white/82 shadow-[0_24px_70px_rgba(106,73,53,0.12)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(106,73,53,0.16)]">
+    <article className="group overflow-hidden rounded-[2rem] border border-white/75 bg-white/82 shadow-[0_24px_70px_rgba(0,0,0,0.12)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(0,0,0,0.16)]">
       <Link href={`/products/${product.slug}`}>
         <div className="relative aspect-[4/5] overflow-hidden">
           <Image
@@ -39,3 +39,4 @@ export function ProductCard({ product }: { product: Product }) {
     </article>
   );
 }
+

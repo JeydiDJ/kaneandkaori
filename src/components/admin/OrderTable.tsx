@@ -53,11 +53,11 @@ export function OrderTable({ orders }: { orders: Order[] }) {
   return (
     <div className="grid gap-4">
       {message ? (
-        <div className="rounded-2xl border border-white/75 bg-white/88 px-4 py-3 text-sm text-[var(--muted)] shadow-[0_12px_32px_rgba(106,73,53,0.08)]">
+        <div className="rounded-2xl border border-white/75 bg-white/88 px-4 py-3 text-sm text-[var(--muted)] shadow-[0_12px_32px_rgba(0,0,0,0.08)]">
           {message}
         </div>
       ) : null}
-      <div className="overflow-hidden rounded-[2rem] border border-white/75 bg-white/88 shadow-[0_20px_55px_rgba(106,73,53,0.1)]">
+      <div className="overflow-hidden rounded-[2rem] border border-white/75 bg-white/88 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
         <table className="min-w-full text-left text-sm">
           <thead className="bg-[var(--surface)]/78 text-[var(--muted)]">
             <tr>
@@ -95,3 +95,4 @@ export function OrderTable({ orders }: { orders: Order[] }) {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export function ProductDetails({ product }: { product: Product }) {
 
   return (
     <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border border-white/75 bg-white/75 shadow-[0_24px_70px_rgba(106,73,53,0.12)]">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border border-white/75 bg-white/75 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
         <Image
           src={product.image}
           alt={product.name}
@@ -22,7 +22,7 @@ export function ProductDetails({ product }: { product: Product }) {
           className="object-cover"
         />
       </div>
-      <div className="grid gap-6 rounded-[2.5rem] border border-white/75 bg-white/82 p-8 shadow-[0_24px_70px_rgba(106,73,53,0.12)]">
+      <div className="grid gap-6 rounded-[2.5rem] border border-white/75 bg-white/82 p-8 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">{product.category}</p>
           <h1 className="display-font mt-3 text-4xl font-semibold">{product.name}</h1>
@@ -55,3 +55,4 @@ export function ProductDetails({ product }: { product: Product }) {
     </section>
   );
 }
+

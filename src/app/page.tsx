@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { getFeaturedProducts } from "@/services/productService";
@@ -64,7 +64,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="kk-fade-up-delayed grid gap-4 text-[var(--muted)]">
-            <div className="rounded-3xl border border-[var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(244,232,219,0.8))] p-5">
+            <div className="rounded-3xl border border-[var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(243,237,225,0.88))] p-5">
               <p className="display-font text-2xl text-[var(--foreground)]">Moments we design for</p>
               <p className="mt-3 leading-8">A fragrance before a brave decision. A scent that returns you to a cherished memory. An aroma that honors a new beginning.</p>
             </div>
@@ -91,3 +91,4 @@ export default async function Home() {
     </div>
   );
 }
+

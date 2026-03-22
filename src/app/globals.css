@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f1e8;
-  --foreground: #25160f;
-  --muted: #6f5a4b;
-  --surface: #efe1d1;
-  --surface-strong: #ead8c2;
-  --accent: #9b5f3a;
-  --accent-contrast: #fff8f2;
-  --border: rgba(92, 61, 44, 0.18);
+  --background: #f3ede1;
+  --foreground: #000000;
+  --muted: #71706c;
+  --surface: #ffffff;
+  --surface-strong: #f3ede1;
+  --accent: #000000;
+  --accent-contrast: #ffffff;
+  --border: rgba(0, 0, 0, 0.14);
   --font-body: "Avenir Next", "Segoe UI", sans-serif;
   --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
 }
@@ -31,10 +31,10 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 8% 2%, rgba(255, 238, 212, 0.95), transparent 34%),
-    radial-gradient(circle at 95% 18%, rgba(206, 154, 114, 0.18), transparent 28%),
-    radial-gradient(circle at 22% 90%, rgba(235, 210, 184, 0.35), transparent 24%),
-    linear-gradient(180deg, #fcf7ef 0%, #f6eee2 100%);
+    radial-gradient(circle at 8% 2%, rgba(255, 255, 255, 0.62), transparent 34%),
+    radial-gradient(circle at 95% 18%, rgba(113, 112, 108, 0.14), transparent 30%),
+    radial-gradient(circle at 22% 90%, rgba(255, 255, 255, 0.32), transparent 24%),
+    linear-gradient(180deg, #f3ede1 0%, #f3ede1 100%);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
   text-rendering: optimizeLegibility;
@@ -65,7 +65,7 @@ img {
 .kk-panel {
   border: 1px solid rgba(255, 255, 255, 0.72);
   background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 24px 70px rgba(106, 73, 53, 0.1);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
 }
 
@@ -83,7 +83,7 @@ img {
   top: 2rem;
   height: 16rem;
   width: 16rem;
-  background: radial-gradient(circle, rgba(223, 180, 137, 0.55) 0%, rgba(223, 180, 137, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
 .kk-orb-2 {
@@ -91,7 +91,7 @@ img {
   top: 17rem;
   height: 18rem;
   width: 18rem;
-  background: radial-gradient(circle, rgba(198, 133, 98, 0.4) 0%, rgba(198, 133, 98, 0) 72%);
+  background: radial-gradient(circle, rgba(113, 112, 108, 0.22) 0%, rgba(113, 112, 108, 0) 72%);
 }
 
 .kk-fade-up {
@@ -110,6 +110,66 @@ img {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes uiEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes uiFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-shell :is(header, footer) {
+    animation: uiEnter 580ms ease both;
+  }
+
+  .page-shell main > section,
+  .page-shell main article,
+  .page-shell main aside,
+  .page-shell main form,
+  .page-shell main table,
+  .page-shell main .rounded-\[2rem\],
+  .page-shell main .rounded-\[2\.5rem\] {
+    animation: uiEnter 620ms ease both;
+  }
+
+  .page-shell :is(a, button, input, textarea, select) {
+    transition: all 220ms ease;
+  }
+
+  .page-shell :is(a:hover, button:hover) {
+    transform: translateY(-1px);
+  }
+
+  .kk-orb {
+    animation: uiFloat 9s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

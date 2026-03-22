@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 
@@ -11,7 +11,7 @@ export function CartItem({ item }: { item: CartItemType }) {
   const { updateQuantity, removeItem } = useCart();
 
   return (
-    <article className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/82 p-5 shadow-[0_18px_45px_rgba(106,73,53,0.08)] md:grid-cols-[120px_1fr_auto] md:items-center">
+    <article className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/82 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.08)] md:grid-cols-[120px_1fr_auto] md:items-center">
       <div className="relative aspect-square w-full overflow-hidden rounded-[1.5rem]">
         <Image src={item.image} alt={item.name} fill className="object-cover" />
       </div>
@@ -31,3 +31,4 @@ export function CartItem({ item }: { item: CartItemType }) {
     </article>
   );
 }
+

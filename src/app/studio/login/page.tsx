@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
 
   return (
     <section className="section-wrap flex items-center justify-center">
-      <form className="grid w-full max-w-md gap-4 rounded-[2.2rem] border border-white/70 bg-white/85 p-8 shadow-[0_20px_60px_rgba(106,73,53,0.09)]" onSubmit={handleSubmit}>
+      <form className="grid w-full max-w-md gap-4 rounded-[2.2rem] border border-white/70 bg-white/85 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.09)]" onSubmit={handleSubmit}>
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Private access</p>
           <h1 className="display-font mt-3 text-5xl">Studio login</h1>
@@ -75,3 +75,4 @@ export default function AdminLoginPage() {
     </section>
   );
 }
+

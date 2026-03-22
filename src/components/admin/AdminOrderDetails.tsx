@@ -47,7 +47,7 @@ export function AdminOrderDetails({ order }: { order: Order }) {
   return (
     <div className="grid gap-6">
       {message ? (
-        <div className="rounded-2xl border border-white/75 bg-white/88 px-4 py-3 text-sm text-[var(--muted)] shadow-[0_12px_32px_rgba(106,73,53,0.08)]">
+        <div className="rounded-2xl border border-white/75 bg-white/88 px-4 py-3 text-sm text-[var(--muted)] shadow-[0_12px_32px_rgba(0,0,0,0.08)]">
           {message}
         </div>
       ) : null}
@@ -60,7 +60,7 @@ export function AdminOrderDetails({ order }: { order: Order }) {
         </div>
         <OrderStatusBadge status={currentOrder.status} />
       </div>
-      <div className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(106,73,53,0.1)] md:grid-cols-2">
+      <div className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(0,0,0,0.10)] md:grid-cols-2">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-[var(--muted)]">Delivery</p>
           <p className="mt-3 leading-7 text-[var(--foreground)]">{currentOrder.address}<br />{currentOrder.barangay ? `${currentOrder.barangay}, ` : ""}{currentOrder.city}, {currentOrder.province} {currentOrder.postalCode}<br />{currentOrder.country}</p>
@@ -71,7 +71,7 @@ export function AdminOrderDetails({ order }: { order: Order }) {
           <p className="mt-4 text-sm text-[var(--muted)]">Payment: {currentOrder.paymentMethod}{currentOrder.paymentReference ? ` (${currentOrder.paymentReference})` : ""}</p>
         </div>
       </div>
-      <div className="rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(106,73,53,0.1)]">
+      <div className="rounded-[2rem] border border-white/75 bg-white/88 p-6 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
         <p className="text-sm uppercase tracking-[0.25em] text-[var(--muted)]">Items</p>
         <div className="mt-4 space-y-4">
           {currentOrder.items.map((item) => (
@@ -107,3 +107,4 @@ export function AdminOrderDetails({ order }: { order: Order }) {
     </div>
   );
 }
+
