@@ -53,13 +53,13 @@ export function OrderTable({ orders }: { orders: Order[] }) {
   return (
     <div className="grid gap-4">
       {message ? (
-        <div className="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 text-sm text-[var(--muted)]">
+        <div className="rounded-2xl border border-white/75 bg-white/88 px-4 py-3 text-sm text-[var(--muted)] shadow-[0_12px_32px_rgba(106,73,53,0.08)]">
           {message}
         </div>
       ) : null}
-      <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/85">
+      <div className="overflow-hidden rounded-[2rem] border border-white/75 bg-white/88 shadow-[0_20px_55px_rgba(106,73,53,0.1)]">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-[var(--surface)] text-[var(--muted)]">
+          <thead className="bg-[var(--surface)]/78 text-[var(--muted)]">
             <tr>
               <th className="px-5 py-4">Reference</th>
               <th className="px-5 py-4">Customer</th>
@@ -71,7 +71,7 @@ export function OrderTable({ orders }: { orders: Order[] }) {
           </thead>
           <tbody>
             {localOrders.map((order) => (
-              <tr key={order.id} className="border-t border-[var(--border)] align-top">
+              <tr key={order.id} className="border-t border-[var(--border)] align-top hover:bg-white/35">
                 <td className="px-5 py-4 font-semibold">{formatOrderReference(order.id)}</td>
                 <td className="px-5 py-4">
                   <p className="font-semibold text-[var(--foreground)]">{order.customerName}</p>
@@ -82,7 +82,7 @@ export function OrderTable({ orders }: { orders: Order[] }) {
                 <td className="px-5 py-4 text-[var(--muted)]">{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td className="px-5 py-4">
                   <div className="flex flex-wrap gap-2">
-                    <Link href={`/studio/orders/${order.id}`} className="rounded-full border border-[var(--border)] px-3 py-2">View</Link>
+                    <Link href={`/studio/orders/${order.id}`} className="rounded-full border border-[var(--border)] bg-white/75 px-3 py-2 font-medium transition hover:bg-[var(--surface)]/75">View</Link>
                     <Button variant="secondary" className="px-3 py-2" disabled={savingId === order.id} onClick={() => updateStatus(order.id, "Confirmed")}>Confirm</Button>
                     <Button variant="secondary" className="px-3 py-2" disabled={savingId === order.id} onClick={() => updateStatus(order.id, "Shipped")}>Ship</Button>
                   </div>

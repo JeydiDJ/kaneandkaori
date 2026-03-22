@@ -11,16 +11,16 @@ export function CartItem({ item }: { item: CartItemType }) {
   const { updateQuantity, removeItem } = useCart();
 
   return (
-    <article className="grid gap-4 rounded-[2rem] border border-white/70 bg-white/80 p-5 md:grid-cols-[120px_1fr_auto] md:items-center">
+    <article className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/82 p-5 shadow-[0_18px_45px_rgba(106,73,53,0.08)] md:grid-cols-[120px_1fr_auto] md:items-center">
       <div className="relative aspect-square w-full overflow-hidden rounded-[1.5rem]">
         <Image src={item.image} alt={item.name} fill className="object-cover" />
       </div>
       <div>
-        <h3 className="text-xl font-semibold">{item.name}</h3>
+        <h3 className="display-font text-2xl">{item.name}</h3>
         <p className="mt-2 text-sm text-[var(--muted)]">{formatPrice(item.price)} each</p>
         <div className="mt-4 flex items-center gap-3">
           <Button variant="secondary" className="px-3 py-2" onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))}>-</Button>
-          <span className="min-w-8 text-center">{item.quantity}</span>
+          <span className="min-w-8 rounded-full bg-[var(--surface)]/60 px-3 py-1 text-center font-semibold">{item.quantity}</span>
           <Button variant="secondary" className="px-3 py-2" onClick={() => updateQuantity(item.productId, item.quantity + 1)}>+</Button>
         </div>
       </div>

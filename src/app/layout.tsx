@@ -9,7 +9,7 @@ import { siteConfig } from "@/constants/config";
 import { CartProvider } from "@/hooks/useCart";
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} | Perfume Ecommerce`,
+  title: `${siteConfig.name} | Fragrance for Becoming`,
   description: siteConfig.description,
   icons: {
     icon: favicon.src,

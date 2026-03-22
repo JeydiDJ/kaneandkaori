@@ -5,7 +5,7 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
   return (
     <AdminGate>
       <section className="section-wrap">
-        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
           <AdminSidebar />
           <div>{children}</div>
         </div>

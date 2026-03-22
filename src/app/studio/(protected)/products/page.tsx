@@ -35,19 +35,19 @@ export default function AdminProductsPage() {
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Catalog</p>
           <h1 className="display-font mt-3 text-5xl">Manage products</h1>
         </div>
-        <Link href="/studio/products/create" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)]">Add product</Link>
+        <Link href="/studio/products/create" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_12px_26px_rgba(125,78,51,0.28)] transition hover:brightness-95">Add product</Link>
       </div>
       <div className="grid gap-4">
         {products.map((product) => (
-          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/70 bg-white/85 p-5 md:grid-cols-[100px_1fr_auto] md:items-center">
+          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_16px_45px_rgba(106,73,53,0.08)] md:grid-cols-[100px_1fr_auto] md:items-center">
             <div className="relative aspect-square overflow-hidden rounded-[1.25rem]">
               <Image src={product.image || "/next.svg"} alt={product.name} fill className="object-cover" />
             </div>
             <div>
-              <p className="text-xl font-semibold">{product.name}</p>
+              <p className="text-xl font-semibold leading-snug">{product.name}</p>
               <p className="mt-2 text-sm text-[var(--muted)]">{product.category} - {formatPrice(product.price)} - Stock {product.inventory}</p>
             </div>
-            <Link href={`/studio/products/edit/${product.id}`} className="rounded-full border border-[var(--border)] px-4 py-3 text-sm font-semibold">Edit</Link>
+            <Link href={`/studio/products/edit/${product.id}`} className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-sm font-semibold transition hover:bg-[var(--surface)]/75">Edit</Link>
           </div>
         ))}
       </div>

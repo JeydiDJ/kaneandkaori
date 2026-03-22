@@ -16,9 +16,9 @@ export default function CartPage() {
         <h1 className="display-font mt-3 text-5xl">Review the order before checkout</h1>
       </div>
       {items.length === 0 ? (
-        <div className="rounded-[2rem] border border-dashed border-[var(--border)] bg-white/70 p-10 text-center">
+        <div className="rounded-[2rem] border border-dashed border-[var(--border)] bg-white/78 p-10 text-center shadow-[0_16px_45px_rgba(106,73,53,0.08)]">
           <p className="text-lg text-[var(--muted)]">The cart is empty right now.</p>
-          <Link href="/products" className="mt-4 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)]">Browse products</Link>
+          <Link href="/products" className="mt-4 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_12px_26px_rgba(125,78,51,0.28)] transition hover:brightness-95">Browse products</Link>
         </div>
       ) : (
         <div className="grid gap-8 lg:grid-cols-[1fr_360px]">

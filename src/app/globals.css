@@ -5,6 +5,7 @@
   --foreground: #25160f;
   --muted: #6f5a4b;
   --surface: #efe1d1;
+  --surface-strong: #ead8c2;
   --accent: #9b5f3a;
   --accent-contrast: #fff8f2;
   --border: rgba(92, 61, 44, 0.18);
@@ -30,11 +31,13 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(255, 237, 209, 0.95), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(202, 154, 112, 0.2), transparent 26%),
-    linear-gradient(180deg, #fbf5ed 0%, #f5ede2 100%);
+    radial-gradient(circle at 8% 2%, rgba(255, 238, 212, 0.95), transparent 34%),
+    radial-gradient(circle at 95% 18%, rgba(206, 154, 114, 0.18), transparent 28%),
+    radial-gradient(circle at 22% 90%, rgba(235, 210, 184, 0.35), transparent 24%),
+    linear-gradient(180deg, #fcf7ef 0%, #f6eee2 100%);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
 img {
@@ -57,6 +60,13 @@ img {
   width: 100%;
   max-width: 80rem;
   padding: 3rem 1.5rem;
+}
+
+.kk-panel {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 24px 70px rgba(106, 73, 53, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .kk-orb {
