@@ -25,6 +25,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
 }
 
 body {
@@ -75,7 +76,7 @@ img {
   border-radius: 9999px;
   filter: blur(36px);
   opacity: 0.5;
-  z-index: -1;
+  z-index: 1;
 }
 
 .kk-orb-1 {
@@ -102,6 +103,154 @@ img {
   animation: kkFadeUp 900ms ease-out both;
 }
 
+.kk-hero-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.kk-landing-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.kk-landing-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)),
+    linear-gradient(180deg, rgba(243, 237, 225, 0.35), rgba(243, 237, 225, 0.35));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.kk-landing-stage > *:not(.kk-landing-fx) {
+  position: relative;
+  z-index: 2;
+}
+
+.kk-landing-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.kk-hero-stage {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.16)),
+    linear-gradient(180deg, rgba(243, 237, 225, 0.56), rgba(243, 237, 225, 0.56));
+}
+
+.kk-hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.kk-float-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(45px);
+  opacity: 0.45;
+}
+
+.kk-float-blob-1 {
+  top: 2rem;
+  left: 4%;
+  width: 18rem;
+  height: 10rem;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.kk-float-blob-2 {
+  top: 20%;
+  right: 8%;
+  width: 14rem;
+  height: 14rem;
+  background: rgba(113, 112, 108, 0.22);
+}
+
+.kk-float-blob-3 {
+  bottom: 8%;
+  left: 16%;
+  width: 16rem;
+  height: 8rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.kk-float-blob-4 {
+  bottom: 4%;
+  right: 2%;
+  width: 12rem;
+  height: 12rem;
+  background: rgba(113, 112, 108, 0.2);
+}
+
+.kk-float-blob-5 {
+  top: 42%;
+  left: 52%;
+  width: 15rem;
+  height: 10rem;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.kk-float-blob-6 {
+  bottom: 14%;
+  right: 20%;
+  width: 14rem;
+  height: 9rem;
+  background: rgba(113, 112, 108, 0.16);
+}
+
+.kk-foundation {
+  min-height: 18rem;
+}
+
+.kk-foundation-card {
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
+  border-radius: 1.2rem;
+  padding: 1.1rem 1.05rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.kk-foundation-stage {
+  animation: kkFoundationIn 520ms ease both;
+}
+
+.kk-foundation-track {
+  display: block;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+}
+
+.kk-foundation-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: #000000;
+}
+
+.kk-foundation-fill.is-active {
+  animation-name: kkFoundationProgress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
 @keyframes kkFadeUp {
   from {
     opacity: 0;
@@ -110,6 +259,28 @@ img {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes kkFoundationIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes kkFoundationProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }
 
@@ -131,6 +302,26 @@ img {
   }
   50% {
     transform: translateY(-8px);
+  }
+}
+
+@keyframes uiDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes uiDriftAlt {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 10px, 0);
   }
 }
 
@@ -159,6 +350,21 @@ img {
 
   .kk-orb {
     animation: uiFloat 9s ease-in-out infinite;
+  }
+
+  .kk-float-blob-1,
+  .kk-float-blob-3 {
+    animation: uiDrift 8s ease-in-out infinite;
+  }
+
+  .kk-float-blob-2,
+  .kk-float-blob-4,
+  .kk-float-blob-6 {
+    animation: uiDriftAlt 10s ease-in-out infinite;
+  }
+
+  .kk-float-blob-5 {
+    animation: uiDrift 11s ease-in-out infinite;
   }
 }
 
