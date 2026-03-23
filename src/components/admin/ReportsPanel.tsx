@@ -83,18 +83,19 @@ export function ReportsPanel() {
     );
   }
 
+  const reportData = analytics;
   const activeSeries =
-    chartRange === "this-month" ? analytics.currentMonthSales : analytics.monthlySales;
+    chartRange === "this-month" ? reportData.currentMonthSales : reportData.monthlySales;
   const maxRevenue = Math.max(...activeSeries.map((entry) => entry.revenue), 1);
-  const maxUnits = Math.max(...analytics.topProducts.map((entry) => entry.unitsSold), 1);
+  const maxUnits = Math.max(...reportData.topProducts.map((entry) => entry.unitsSold), 1);
   const chartPoints = activeSeries.map((point, index) => {
     const x = activeSeries.length === 1 ? 50 : (index / (activeSeries.length - 1)) * 100;
     const y = 100 - (point.revenue / maxRevenue) * 100;
     return `${x},${Number.isFinite(y) ? y : 100}`;
   });
-  const currentMonthRevenue = analytics.currentMonthSales.reduce((sum, point) => sum + point.revenue, 0);
-  const currentMonthOrders = analytics.currentMonthSales.reduce((sum, point) => sum + point.orders, 0);
-  const bestDay = [...analytics.currentMonthSales].sort(
+  const currentMonthRevenue = reportData.currentMonthSales.reduce((sum, point) => sum + point.revenue, 0);
+  const currentMonthOrders = reportData.currentMonthSales.reduce((sum, point) => sum + point.orders, 0);
+  const bestDay = [...reportData.currentMonthSales].sort(
     (left, right) => right.revenue - left.revenue || right.orders - left.orders,
   )[0];
 
@@ -124,7 +125,7 @@ export function ReportsPanel() {
   function exportInventoryCsv() {
     const rows = [
       ["Product", "Category", "Price", "Stock", "Status"],
-      ...analytics.inventory.report.map((product) => [
+      ...reportData.inventory.report.map((product) => [
         product.name,
         product.category,
         String(product.price),
@@ -141,7 +142,7 @@ export function ReportsPanel() {
   }
 
   function exportSummaryJson() {
-    downloadFile("admin-analytics.json", JSON.stringify(analytics, null, 2), "application/json;charset=utf-8;");
+    downloadFile("admin-analytics.json", JSON.stringify(reportData, null, 2), "application/json;charset=utf-8;");
   }
 
   function renderChart(expanded = false) {
@@ -242,7 +243,7 @@ export function ReportsPanel() {
         </button>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
-        {analytics.cards.map((card) => (
+        {reportData.cards.map((card) => (
           <div
             key={card.label}
             className="rounded-[2rem] border border-white/75 bg-white/92 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6"
@@ -336,8 +337,8 @@ export function ReportsPanel() {
         <div className="rounded-[2rem] border border-white/75 bg-white/92 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
           <h2 className="mt-2 text-2xl font-semibold">Top-performing fragrances</h2>
           <div className="mt-5 grid gap-4">
-            {analytics.topProducts.length > 0 ? (
-              analytics.topProducts.map((product) => (
+            {reportData.topProducts.length > 0 ? (
+              reportData.topProducts.map((product) => (
                 <div
                   key={`${product.productId}-${product.name}`}
                   className="rounded-[1.5rem] border border-white/70 bg-[var(--surface-strong)]/55 p-4"
@@ -374,10 +375,10 @@ export function ReportsPanel() {
             <h2 className="mt-2 text-2xl font-semibold">Current stock levels</h2>
           </div>
           <div className="flex flex-wrap gap-2 text-sm text-[var(--muted)]">
-            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{analytics.inventory.totalSkus} SKUs</span>
-            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{analytics.inventory.totalUnits} units on hand</span>
-            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{analytics.inventory.lowStockCount} low stock</span>
-            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{analytics.inventory.outOfStockCount} out of stock</span>
+            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{reportData.inventory.totalSkus} SKUs</span>
+            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{reportData.inventory.totalUnits} units on hand</span>
+            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{reportData.inventory.lowStockCount} low stock</span>
+            <span className="rounded-full bg-[var(--surface-strong)]/70 px-3 py-2">{reportData.inventory.outOfStockCount} out of stock</span>
           </div>
         </div>
         <div className="mt-5 overflow-x-auto">
@@ -392,7 +393,7 @@ export function ReportsPanel() {
               </tr>
             </thead>
             <tbody>
-              {analytics.inventory.report.map((product) => (
+              {reportData.inventory.report.map((product) => (
                 <tr key={product.id} className="border-t border-[var(--border)]">
                   <td className="px-3 py-4 font-medium">{product.name}</td>
                   <td className="px-3 py-4 text-[var(--muted)]">{product.category}</td>
