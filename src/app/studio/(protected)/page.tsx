@@ -19,8 +19,13 @@ export default function AdminDashboardPage() {
           <div className="relative z-10 flex h-full flex-col">
             <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Add a new fragrance</h2>
             <div className="mt-6 inline-flex items-center gap-3 self-start rounded-full bg-black px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition group-hover:translate-x-1">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/14">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <path d="M10 4.25v11.5" strokeLinecap="round" />
+                  <path d="M4.25 10h11.5" strokeLinecap="round" />
+                </svg>
+              </span>
               Open product creator
-              <span aria-hidden="true">-&gt;</span>
             </div>
           </div>
         </Link>
@@ -32,8 +37,14 @@ export default function AdminDashboardPage() {
           <div className="relative z-10 flex h-full flex-col">
             <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Review customer orders</h2>
             <div className="mt-6 inline-flex items-center gap-3 self-start rounded-full border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-black shadow-[0_14px_28px_rgba(0,0,0,0.10)] transition group-hover:translate-x-1">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                  <path d="M6 5.75h8" strokeLinecap="round" />
+                  <path d="M6 10h8" strokeLinecap="round" />
+                  <path d="M6 14.25h5.5" strokeLinecap="round" />
+                </svg>
+              </span>
               Open order queue
-              <span aria-hidden="true">-&gt;</span>
             </div>
           </div>
         </Link>

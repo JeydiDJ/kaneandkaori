@@ -34,6 +34,58 @@ const nextActions: Partial<Record<Order["status"], Order["status"][]>> = {
   Shipped: ["Delivered"],
 };
 
+function ViewIcon() {
+  return (
+    <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <path d="M2.25 10s2.9-4.75 7.75-4.75S17.75 10 17.75 10 14.85 14.75 10 14.75 2.25 10 2.25 10Z" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="10" cy="10" r="2.1" />
+    </svg>
+  );
+}
+
+function ActionIcon({ status }: { status: Order["status"] }) {
+  switch (status) {
+    case "Confirmed":
+      return (
+        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="m5.5 10 2.5 2.5 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "Packed":
+      return (
+        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <path d="M4.5 6.25 10 3.5l5.5 2.75L10 9 4.5 6.25Z" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M4.5 6.25V13.75L10 16.5l5.5-2.75V6.25" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "Shipped":
+      return (
+        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <path d="M3.5 6.5h8.25v5.25H3.5Z" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M11.75 8h2l1.75 2v1.75h-3.75Z" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="6.5" cy="13.75" r="1.25" />
+          <circle cx="13.75" cy="13.75" r="1.25" />
+        </svg>
+      );
+    case "Delivered":
+      return (
+        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="m5.5 10 2.5 2.5 6-6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M13.75 5.5h2.75v2.75" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "Cancelled":
+      return (
+        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="m6 6 8 8" strokeLinecap="round" />
+          <path d="m14 6-8 8" strokeLinecap="round" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 function getActionLabel(status: Order["status"]) {
   switch (status) {
     case "Confirmed":
@@ -220,18 +272,20 @@ export function OrderTable({ orders }: { orders: Order[] }) {
                   <div className="flex max-w-[240px] flex-nowrap gap-1.5 overflow-x-auto pb-1">
                     <Link
                       href={`/studio/orders/${order.id}`}
-                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-white/75 px-2.5 py-1 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] transition hover:border-black/15 hover:bg-black hover:text-white"
+                      className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-[var(--border)] bg-white/78 px-2.5 py-1.5 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] shadow-[0_8px_16px_rgba(0,0,0,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-black/15 hover:bg-black hover:text-white hover:shadow-[0_14px_24px_rgba(0,0,0,0.12)]"
                     >
+                      <ViewIcon />
                       View
                     </Link>
                     {(nextActions[order.status] ?? []).map((status) => (
                       <Button
                         key={status}
                         variant="secondary"
-                        className="shrink-0 px-2.5 py-1 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] hover:border-black/15 hover:bg-black hover:text-white"
+                        className="shrink-0 px-2.5 py-1.5 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] shadow-[0_8px_16px_rgba(0,0,0,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-black/15 hover:bg-black hover:text-white hover:shadow-[0_14px_24px_rgba(0,0,0,0.12)]"
                         disabled={savingId === order.id}
                         onClick={() => updateStatus(order.id, status)}
                       >
+                        <ActionIcon status={status} />
                         {getActionLabel(status)}
                       </Button>
                     ))}
