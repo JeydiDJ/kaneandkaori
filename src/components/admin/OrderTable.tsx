@@ -201,14 +201,14 @@ export function OrderTable({ orders }: { orders: Order[] }) {
           {message}
         </div>
       ) : null}
-      <div className="flex flex-wrap items-end justify-between gap-3 rounded-[1.6rem] border border-white/75 bg-white/82 px-4 py-4 shadow-[0_16px_40px_rgba(0,0,0,0.08)]">
+      <div className="flex flex-col gap-3 rounded-[1.6rem] border border-white/75 bg-white/82 px-4 py-4 shadow-[0_16px_40px_rgba(0,0,0,0.08)] sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
         <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">Orders</p>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid gap-3 sm:flex sm:flex-wrap">
           <label className="grid gap-1 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
             Sort
             <span className="relative">
               <select
-                className="appearance-none rounded-[1.4rem] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(243,237,225,0.85))] px-4 py-2 pr-10 text-sm font-semibold normal-case tracking-normal text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.06)] outline-none transition focus:border-black/20"
+                className="w-full min-w-0 appearance-none rounded-[1.4rem] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(243,237,225,0.85))] px-4 py-2 pr-10 text-sm font-semibold normal-case tracking-normal text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.06)] outline-none transition focus:border-black/20 sm:min-w-[180px]"
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value as SortOption)}
               >
@@ -226,7 +226,7 @@ export function OrderTable({ orders }: { orders: Order[] }) {
             Filter
             <span className="relative">
               <select
-                className="appearance-none rounded-[1.4rem] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(243,237,225,0.85))] px-4 py-2 pr-10 text-sm font-semibold normal-case tracking-normal text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.06)] outline-none transition focus:border-black/20"
+                className="w-full min-w-0 appearance-none rounded-[1.4rem] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(243,237,225,0.85))] px-4 py-2 pr-10 text-sm font-semibold normal-case tracking-normal text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.06)] outline-none transition focus:border-black/20 sm:min-w-[180px]"
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value as Order["status"] | "All")}
               >

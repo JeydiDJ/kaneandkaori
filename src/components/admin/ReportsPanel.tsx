@@ -219,24 +219,24 @@ export function ReportsPanel() {
 
   return (
     <div className="grid gap-6">
-      <div className="flex flex-wrap gap-2">
+      <div className="grid gap-2 sm:flex sm:flex-wrap">
         <button
           type="button"
-          className="rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white"
+          className="w-full rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white sm:w-auto"
           onClick={exportSalesCsv}
         >
           Download sales CSV
         </button>
         <button
           type="button"
-          className="rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white"
+          className="w-full rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white sm:w-auto"
           onClick={exportInventoryCsv}
         >
           Download inventory CSV
         </button>
         <button
           type="button"
-          className="rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white"
+          className="w-full rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white sm:w-auto"
           onClick={exportSummaryJson}
         >
           Download summary JSON
@@ -256,7 +256,7 @@ export function ReportsPanel() {
       </div>
 
       <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.7fr)_minmax(360px,0.95fr)]">
-        <div className="rounded-[2rem] border border-white/75 bg-white/92 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
+        <div className="min-w-0 rounded-[2rem] border border-white/75 bg-white/92 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-[var(--muted)]">Sales report</p>
@@ -269,9 +269,9 @@ export function ReportsPanel() {
             </div>
           </div>
           <div className="mt-6 rounded-[1.9rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(243,237,225,0.92))] p-4 sm:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap gap-2">
-                <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+              <div className="grid gap-2 sm:flex sm:flex-wrap">
+                <div className="grid grid-cols-2 rounded-full border border-black/10 bg-white/80 p-1 sm:inline-flex">
                   <button
                     type="button"
                     className={`rounded-full px-3 py-2 text-sm font-medium ${chartRange === "six-months" ? "bg-black text-white" : "text-[var(--muted)]"}`}
@@ -287,26 +287,26 @@ export function ReportsPanel() {
                     This month
                   </button>
                 </div>
-                <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
-                <button
-                  type="button"
-                  className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "bar" ? "bg-black text-white" : "text-[var(--muted)]"}`}
-                  onClick={() => setChartType("bar")}
-                >
-                  Bar
-                </button>
-                <button
-                  type="button"
-                  className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "line" ? "bg-black text-white" : "text-[var(--muted)]"}`}
-                  onClick={() => setChartType("line")}
-                >
-                  Line
-                </button>
+                <div className="grid grid-cols-2 rounded-full border border-black/10 bg-white/80 p-1 sm:inline-flex">
+                  <button
+                    type="button"
+                    className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "bar" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                    onClick={() => setChartType("bar")}
+                  >
+                    Bar
+                  </button>
+                  <button
+                    type="button"
+                    className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "line" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                    onClick={() => setChartType("line")}
+                  >
+                    Line
+                  </button>
                 </div>
               </div>
               <button
                 type="button"
-                className="rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold transition hover:bg-black hover:text-white"
+                className="w-full rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold transition hover:bg-black hover:text-white sm:w-auto"
                 onClick={() => setIsChartExpanded(true)}
               >
                 Expand
@@ -334,7 +334,7 @@ export function ReportsPanel() {
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-white/75 bg-white/92 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
+        <div className="min-w-0 rounded-[2rem] border border-white/75 bg-white/92 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
           <h2 className="mt-2 text-2xl font-semibold">Top-performing fragrances</h2>
           <div className="mt-5 grid gap-4">
             {reportData.topProducts.length > 0 ? (

@@ -97,7 +97,7 @@ export function AdminDashboardOverview() {
       </div>
 
       <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.6fr)_minmax(360px,0.9fr)]">
-        <div className="rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
+        <div className="min-w-0 rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.10)] sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-[var(--muted)]">Sales report</p>
@@ -105,9 +105,9 @@ export function AdminDashboardOverview() {
                 {chartRange === "this-month" ? "This month performance" : "Monthly revenue and order flow"}
               </h2>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex flex-wrap gap-2">
-                <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="grid gap-2 sm:flex sm:flex-wrap">
+                <div className="grid grid-cols-2 rounded-full border border-black/10 bg-white/80 p-1 sm:inline-flex">
                   <button
                     type="button"
                     className={`rounded-full px-3 py-2 text-sm font-medium ${chartRange === "six-months" ? "bg-black text-white" : "text-[var(--muted)]"}`}
@@ -123,26 +123,26 @@ export function AdminDashboardOverview() {
                     This month
                   </button>
                 </div>
-                <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
-                <button
-                  type="button"
-                  className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "bar" ? "bg-black text-white" : "text-[var(--muted)]"}`}
-                  onClick={() => setChartType("bar")}
-                >
-                  Bar
-                </button>
-                <button
-                  type="button"
-                  className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "line" ? "bg-black text-white" : "text-[var(--muted)]"}`}
-                  onClick={() => setChartType("line")}
-                >
-                  Line
-                </button>
+                <div className="grid grid-cols-2 rounded-full border border-black/10 bg-white/80 p-1 sm:inline-flex">
+                  <button
+                    type="button"
+                    className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "bar" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                    onClick={() => setChartType("bar")}
+                  >
+                    Bar
+                  </button>
+                  <button
+                    type="button"
+                    className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "line" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                    onClick={() => setChartType("line")}
+                  >
+                    Line
+                  </button>
                 </div>
               </div>
               <Link
                 href="/studio/reports"
-                className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-2 text-sm font-medium"
+                className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-2 text-center text-sm font-medium"
               >
                 Open reports
               </Link>
