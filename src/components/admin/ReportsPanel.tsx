@@ -33,6 +33,36 @@ function shouldShowDayLabel(index: number, total: number) {
   return index === 0 || index === total - 1 || (index + 1) % 5 === 0;
 }
 
+function escapeHtml(value: string | number) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function buildExcelTable(title: string, headers: string[], rows: Array<Array<string | number>>) {
+  return `
+    <div class="sheet-block">
+      <h2>${escapeHtml(title)}</h2>
+      <table>
+        <thead>
+          <tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+          ${rows
+            .map(
+              (row) =>
+                `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`,
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
 export function ReportsPanel() {
   const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -109,35 +139,121 @@ export function ReportsPanel() {
     URL.revokeObjectURL(url);
   }
 
-  function exportSalesCsv() {
-    const rows = [
-      [chartRange === "this-month" ? "Day" : "Month", "Revenue", "Orders"],
-      ...activeSeries.map((point) => [point.label, String(point.revenue), String(point.orders)]),
-    ];
+  function exportExcelReport() {
+    const generatedAtLabel = new Date(reportData.generatedAt).toLocaleString("en-PH", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    const html = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <meta charset="utf-8" />
+          <meta name="ProgId" content="Excel.Sheet" />
+          <meta name="Generator" content="Kane & Kaori Admin Studio" />
+          <style>
+            body {
+              font-family: Calibri, Arial, sans-serif;
+              margin: 24px;
+              color: #1f1a16;
+              background: #f5efe4;
+            }
+            h1 {
+              margin: 0 0 8px;
+              font-size: 22pt;
+            }
+            .subhead {
+              margin: 0 0 18px;
+              color: #6b6259;
+            }
+            .sheet-block {
+              margin: 0 0 24px;
+              padding: 16px;
+              background: #ffffff;
+              border: 1px solid #dfd5c6;
+            }
+            h2 {
+              margin: 0 0 12px;
+              font-size: 14pt;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+              background: #ffffff;
+            }
+            th, td {
+              border: 1px solid #d8ccbb;
+              padding: 8px 10px;
+              font-size: 11pt;
+              text-align: left;
+            }
+            th {
+              background: #222222;
+              color: #ffffff;
+              font-weight: 700;
+            }
+            tr:nth-child(even) td {
+              background: #f8f3eb;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Kane & Kaori Admin Report</h1>
+          <p class="subhead">Generated ${escapeHtml(generatedAtLabel)}</p>
+          ${buildExcelTable(
+            "Summary Cards",
+            ["Metric", "Value", "Change"],
+            reportData.cards.map((card) => [card.label, card.value, card.changeLabel]),
+          )}
+          ${buildExcelTable(
+            "Monthly Sales",
+            ["Month", "Revenue", "Orders"],
+            reportData.monthlySales.map((point) => [point.label, point.revenue, point.orders]),
+          )}
+          ${buildExcelTable(
+            "Current Month Daily Sales",
+            ["Day", "Date", "Revenue", "Orders"],
+            reportData.currentMonthSales.map((point) => [
+              point.label,
+              point.date,
+              point.revenue,
+              point.orders,
+            ]),
+          )}
+          ${buildExcelTable(
+            "Status Breakdown",
+            ["Status", "Count"],
+            reportData.statusBreakdown.map((item) => [item.status, item.count]),
+          )}
+          ${buildExcelTable(
+            "Top Products",
+            ["Product ID", "Product", "Units Sold", "Revenue"],
+            reportData.topProducts.map((product) => [
+              product.productId,
+              product.name,
+              product.unitsSold,
+              product.revenue,
+            ]),
+          )}
+          ${buildExcelTable(
+            "Inventory Report",
+            ["Product", "Category", "Price", "Stock", "Status"],
+            reportData.inventory.report.map((product) => [
+              product.name,
+              product.category,
+              product.price,
+              product.inventory,
+              product.status,
+            ]),
+          )}
+        </body>
+      </html>
+    `;
 
     downloadFile(
-      chartRange === "this-month" ? "sales-report-this-month.csv" : "sales-report-6-months.csv",
-      rows.map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n"),
-      "text/csv;charset=utf-8;",
-    );
-  }
-
-  function exportInventoryCsv() {
-    const rows = [
-      ["Product", "Category", "Price", "Stock", "Status"],
-      ...reportData.inventory.report.map((product) => [
-        product.name,
-        product.category,
-        String(product.price),
-        String(product.inventory),
-        product.status,
-      ]),
-    ];
-
-    downloadFile(
-      "inventory-report.csv",
-      rows.map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n"),
-      "text/csv;charset=utf-8;",
+      "kane-and-kaori-admin-report.xls",
+      `\uFEFF${html}`,
+      "application/vnd.ms-excel;charset=utf-8;",
     );
   }
 
@@ -222,17 +338,10 @@ export function ReportsPanel() {
       <div className="grid gap-2 sm:flex sm:flex-wrap">
         <button
           type="button"
-          className="w-full rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white sm:w-auto"
-          onClick={exportSalesCsv}
+          className="w-full rounded-full border border-black/10 bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:brightness-95 sm:w-auto"
+          onClick={exportExcelReport}
         >
-          Download sales CSV
-        </button>
-        <button
-          type="button"
-          className="w-full rounded-full border border-black/10 bg-white/86 px-4 py-2 text-sm font-semibold shadow-[0_10px_24px_rgba(0,0,0,0.06)] transition hover:bg-black hover:text-white sm:w-auto"
-          onClick={exportInventoryCsv}
-        >
-          Download inventory CSV
+          Download Excel report
         </button>
         <button
           type="button"
