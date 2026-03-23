@@ -10,6 +10,13 @@ export type MonthlySalesPoint = {
   orders: number;
 };
 
+export type DailySalesPoint = {
+  label: string;
+  date: string;
+  revenue: number;
+  orders: number;
+};
+
 export type StatusBreakdownItem = {
   status: string;
   count: number;
@@ -35,6 +42,7 @@ export type AdminAnalytics = {
   generatedAt: string;
   cards: AdminMetricCard[];
   monthlySales: MonthlySalesPoint[];
+  currentMonthSales: DailySalesPoint[];
   statusBreakdown: StatusBreakdownItem[];
   topProducts: TopProductReportItem[];
   inventory: {

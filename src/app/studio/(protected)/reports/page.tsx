@@ -6,10 +6,6 @@ export default function AdminReportsPage() {
       <div className="rounded-[2.25rem] border border-white/75 bg-[linear-gradient(140deg,rgba(255,255,255,0.88),rgba(243,237,225,0.72))] p-6 shadow-[0_20px_55px_rgba(0,0,0,0.08)] sm:p-8">
         <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Reports</p>
         <h1 className="display-font mt-3 text-4xl md:text-5xl">Sales and inventory reporting</h1>
-        <p className="mt-3 max-w-3xl text-[var(--muted)]">
-          This view gives the admin team a live read on revenue, top-selling products, and stock
-          health so they can react before inventory issues affect orders.
-        </p>
       </div>
       <ReportsPanel />
     </div>

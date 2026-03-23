@@ -17,19 +17,10 @@ export default function AdminDashboardPage() {
         >
           <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-white/70 blur-2xl transition group-hover:scale-110" />
           <div className="relative z-10 flex h-full flex-col">
-            <p className="text-xs uppercase tracking-[0.32em] text-[var(--muted)]">Catalog action</p>
             <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Add a new fragrance</h2>
-            <p className="mt-3 max-w-xl text-[var(--muted)]">
-              Create a product listing, set pricing and stock, upload imagery, and publish the next scent to the storefront.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
-              <span className="rounded-full bg-white/75 px-3 py-2">New listing</span>
-              <span className="rounded-full bg-white/75 px-3 py-2">Pricing</span>
-              <span className="rounded-full bg-white/75 px-3 py-2">Inventory</span>
-            </div>
             <div className="mt-6 inline-flex items-center gap-3 self-start rounded-full bg-black px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition group-hover:translate-x-1">
               Open product creator
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true">-&gt;</span>
             </div>
           </div>
         </Link>
@@ -39,19 +30,10 @@ export default function AdminDashboardPage() {
         >
           <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-black/6 blur-2xl transition group-hover:scale-110" />
           <div className="relative z-10 flex h-full flex-col">
-            <p className="text-xs uppercase tracking-[0.32em] text-[var(--muted)]">Fulfillment action</p>
             <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Review customer orders</h2>
-            <p className="mt-3 max-w-xl text-[var(--muted)]">
-              Check incoming orders, confirm payment, move shipments through fulfillment, and keep customers updated.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
-              <span className="rounded-full bg-white/75 px-3 py-2">Pending orders</span>
-              <span className="rounded-full bg-white/75 px-3 py-2">Status updates</span>
-              <span className="rounded-full bg-white/75 px-3 py-2">Customer tracking</span>
-            </div>
             <div className="mt-6 inline-flex items-center gap-3 self-start rounded-full border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-black shadow-[0_14px_28px_rgba(0,0,0,0.10)] transition group-hover:translate-x-1">
               Open order queue
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true">-&gt;</span>
             </div>
           </div>
         </Link>

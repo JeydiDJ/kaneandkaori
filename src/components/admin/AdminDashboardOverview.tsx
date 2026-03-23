@@ -15,10 +15,15 @@ function formatMetricValue(label: string, value: number) {
   return new Intl.NumberFormat("en-PH").format(Math.round(value));
 }
 
+function shouldShowDayLabel(index: number, total: number) {
+  return index === 0 || index === total - 1 || (index + 1) % 5 === 0;
+}
+
 export function AdminDashboardOverview() {
   const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
+  const [chartRange, setChartRange] = useState<"six-months" | "this-month">("six-months");
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -63,12 +68,18 @@ export function AdminDashboardOverview() {
     );
   }
 
-  const bestMonthRevenue = Math.max(...analytics.monthlySales.map((month) => month.revenue), 1);
-  const chartPoints = analytics.monthlySales.map((month, index) => {
-    const x = analytics.monthlySales.length === 1 ? 50 : (index / (analytics.monthlySales.length - 1)) * 100;
-    const y = 100 - (month.revenue / bestMonthRevenue) * 100;
+  const activeSeries =
+    chartRange === "this-month" ? analytics.currentMonthSales : analytics.monthlySales;
+  const bestMonthRevenue = Math.max(...activeSeries.map((point) => point.revenue), 1);
+  const chartPoints = activeSeries.map((point, index) => {
+    const x = activeSeries.length === 1 ? 50 : (index / (activeSeries.length - 1)) * 100;
+    const y = 100 - (point.revenue / bestMonthRevenue) * 100;
     return `${x},${Number.isFinite(y) ? y : 100}`;
   });
+  const currentMonthRevenue = analytics.currentMonthSales.reduce((sum, point) => sum + point.revenue, 0);
+  const bestDay = [...analytics.currentMonthSales].sort(
+    (left, right) => right.revenue - left.revenue || right.orders - left.orders,
+  )[0];
 
   return (
     <div className="grid gap-6">
@@ -90,10 +101,29 @@ export function AdminDashboardOverview() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-[var(--muted)]">Sales report</p>
-              <h2 className="mt-2 text-2xl font-semibold">Monthly revenue and order flow</h2>
+              <h2 className="mt-2 text-2xl font-semibold">
+                {chartRange === "this-month" ? "This month performance" : "Monthly revenue and order flow"}
+              </h2>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
+              <div className="flex flex-wrap gap-2">
+                <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
+                  <button
+                    type="button"
+                    className={`rounded-full px-3 py-2 text-sm font-medium ${chartRange === "six-months" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                    onClick={() => setChartRange("six-months")}
+                  >
+                    6 months
+                  </button>
+                  <button
+                    type="button"
+                    className={`rounded-full px-3 py-2 text-sm font-medium ${chartRange === "this-month" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                    onClick={() => setChartRange("this-month")}
+                  >
+                    This month
+                  </button>
+                </div>
+                <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
                 <button
                   type="button"
                   className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "bar" ? "bg-black text-white" : "text-[var(--muted)]"}`}
@@ -108,6 +138,7 @@ export function AdminDashboardOverview() {
                 >
                   Line
                 </button>
+                </div>
               </div>
               <Link
                 href="/studio/reports"
@@ -120,58 +151,86 @@ export function AdminDashboardOverview() {
           <div className="mt-6 rounded-[1.8rem] border border-white/70 bg-[var(--surface-strong)]/45 p-4 sm:p-5">
             {chartType === "bar" ? (
               <div className="overflow-x-auto pb-2">
-                <div className="flex min-w-[620px] items-end gap-3 sm:gap-4">
-                  {analytics.monthlySales.map((month) => (
-                    <div key={month.label} className="flex min-w-[84px] flex-1 flex-col justify-end">
+                <div className={`flex items-end gap-3 sm:gap-4 ${chartRange === "this-month" ? "min-w-[920px]" : "min-w-[620px]"}`}>
+                  {activeSeries.map((point, index) => (
+                    <div key={point.label} className={`flex flex-1 flex-col justify-end ${chartRange === "this-month" ? "min-w-[42px]" : "min-w-[84px]"}`} title={`${point.label}: ${formatPrice(point.revenue)} - ${point.orders} orders`}>
                       <div className="flex h-44 items-end rounded-[1.25rem] bg-white/55 p-2 sm:h-48 sm:p-3">
                         <div
                           className="w-full rounded-[0.9rem] bg-black/90"
                           style={{
-                            height: `${Math.max((month.revenue / bestMonthRevenue) * 100, month.revenue > 0 ? 12 : 4)}%`,
+                            height: `${Math.max((point.revenue / bestMonthRevenue) * 100, point.revenue > 0 ? 12 : 4)}%`,
                           }}
                         />
                       </div>
-                      <p className="mt-3 text-sm font-semibold">{month.label}</p>
-                      <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(month.revenue)}</p>
-                      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{month.orders} orders</p>
+                      {chartRange === "this-month" ? (
+                        <p className={`mt-3 text-center text-xs font-semibold text-[var(--muted)] ${shouldShowDayLabel(index, activeSeries.length) ? "opacity-100" : "opacity-0"}`}>
+                          {point.label}
+                        </p>
+                      ) : (
+                        <>
+                          <p className="mt-3 text-sm font-semibold">{point.label}</p>
+                          <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(point.revenue)}</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{point.orders} orders</p>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             ) : (
               <div className="overflow-x-auto pb-2">
-                <div className="min-w-[620px]">
+                <div className={chartRange === "this-month" ? "min-w-[920px]" : "min-w-[620px]"}>
                   <div className="h-48 rounded-[1.35rem] bg-white/55 p-4">
                     <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full overflow-visible">
-                      <line x1="0" y1="100" x2="100" y2="100" stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" />
-                      <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(0,0,0,0.1)" strokeWidth="0.6" />
-                      <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(0,0,0,0.1)" strokeWidth="0.6" />
-                      <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(0,0,0,0.1)" strokeWidth="0.6" />
+                      <line x1="0" y1="100" x2="100" y2="100" stroke="rgba(17,17,17,0.14)" strokeWidth="0.65" />
+                      <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(17,17,17,0.08)" strokeWidth="0.45" />
+                      <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(17,17,17,0.08)" strokeWidth="0.45" />
+                      <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(17,17,17,0.08)" strokeWidth="0.45" />
                       <polyline
                         fill="none"
-                        stroke="#111111"
-                        strokeWidth="2.2"
+                        stroke="rgba(17,17,17,0.76)"
+                        strokeWidth="1.25"
                         strokeLinejoin="round"
                         strokeLinecap="round"
                         points={chartPoints.join(" ")}
                       />
-                      {chartPoints.map((point) => {
-                        const [cx, cy] = point.split(",");
-                        return <circle key={point} cx={cx} cy={cy} r="2.2" fill="#111111" />;
-                      })}
                     </svg>
                   </div>
-                  <div className="mt-4 grid grid-cols-6 gap-3 sm:gap-4">
-                    {analytics.monthlySales.map((month) => (
-                      <div key={month.label} className="min-w-0">
-                        <p className="text-sm font-semibold">{month.label}</p>
-                        <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(month.revenue)}</p>
-                      </div>
-                    ))}
-                  </div>
+                  {chartRange === "this-month" ? (
+                    <div className="mt-4 flex justify-between gap-2 text-xs font-semibold text-[var(--muted)]">
+                      {activeSeries.map((point, index) =>
+                        shouldShowDayLabel(index, activeSeries.length) ? (
+                          <span key={point.label}>{point.label}</span>
+                        ) : null,
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-4 grid grid-cols-6 gap-3 sm:gap-4">
+                      {activeSeries.map((point) => (
+                        <div key={point.label} className="min-w-0">
+                          <p className="text-sm font-semibold">{point.label}</p>
+                          <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(point.revenue)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
+            {chartRange === "this-month" ? (
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-[1.3rem] bg-white/65 px-4 py-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">This month</p>
+                  <p className="mt-1 text-lg font-semibold">{formatPrice(currentMonthRevenue)}</p>
+                </div>
+                <div className="rounded-[1.3rem] bg-white/65 px-4 py-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">Best day</p>
+                  <p className="mt-1 text-lg font-semibold">
+                    {bestDay ? `${bestDay.label} - ${formatPrice(bestDay.revenue)}` : "No sales"}
+                  </p>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
 

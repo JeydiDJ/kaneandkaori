@@ -2,6 +2,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase";
 import type {
   AdminAnalytics,
   AdminMetricCard,
+  DailySalesPoint,
   InventoryReportItem,
   MonthlySalesPoint,
   StatusBreakdownItem,
@@ -37,7 +38,7 @@ type MonthSeriesPoint = MonthlySalesPoint & {
   key: string;
 };
 
-const LOW_STOCK_THRESHOLD = 5;
+const LOW_STOCK_THRESHOLD = 10;
 const MONTHS_TO_SHOW = 6;
 const FULFILLED_STATUSES: OrderStatus[] = ["Confirmed", "Packed", "Shipped", "Delivered"];
 
@@ -66,12 +67,32 @@ function createMonthSeries() {
   return months;
 }
 
+function createCurrentMonthSeries() {
+  const days: DailySalesPoint[] = [];
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const date = new Date(Date.UTC(year, month, day));
+    days.push({
+      label: String(day),
+      date: date.toISOString(),
+      revenue: 0,
+      orders: 0,
+    });
+  }
+
+  return days;
+}
+
 function getInventoryStatus(inventory: number): InventoryReportItem["status"] {
   if (inventory <= 0) {
     return "Out of stock";
   }
 
-  if (inventory <= LOW_STOCK_THRESHOLD) {
+  if (inventory < LOW_STOCK_THRESHOLD) {
     return "Low stock";
   }
 
@@ -102,7 +123,7 @@ function buildMetricCards(
   const revenue = orders.reduce((sum, order) => sum + Number(order.total_amount ?? 0), 0);
   const averageOrderValue = orders.length > 0 ? revenue / orders.length : 0;
   const lowStockCount = products.filter(
-    (product) => product.inventory > 0 && product.inventory <= LOW_STOCK_THRESHOLD,
+    (product) => product.inventory > 0 && product.inventory < LOW_STOCK_THRESHOLD,
   ).length;
 
   return [
@@ -155,7 +176,14 @@ export async function getAdminAnalytics(): Promise<AdminAnalytics> {
   const orders = (orderRows ?? []) as AnalyticsOrderRow[];
   const products = (productRows ?? []) as AnalyticsProductRow[];
   const monthlySales = createMonthSeries();
+  const currentMonthSales = createCurrentMonthSeries();
   const monthIndexByKey = new Map(monthlySales.map((point, index) => [point.key, index] as const));
+  const currentMonthStart = new Date(
+    Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1),
+  );
+  const currentMonthEnd = new Date(
+    Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 1),
+  );
   const statusCounts = new Map<string, number>();
   const productTotals = new Map<string, TopProductReportItem>();
 
@@ -171,6 +199,18 @@ export async function getAdminAnalytics(): Promise<AdminAnalytics> {
         revenue: monthlySales[monthIndex].revenue + orderTotal,
         orders: monthlySales[monthIndex].orders + 1,
       };
+    }
+
+    if (createdAt >= currentMonthStart && createdAt < currentMonthEnd) {
+      const dayIndex = createdAt.getUTCDate() - 1;
+
+      if (currentMonthSales[dayIndex]) {
+        currentMonthSales[dayIndex] = {
+          ...currentMonthSales[dayIndex],
+          revenue: currentMonthSales[dayIndex].revenue + orderTotal,
+          orders: currentMonthSales[dayIndex].orders + 1,
+        };
+      }
     }
 
     statusCounts.set(order.status, (statusCounts.get(order.status) ?? 0) + 1);
@@ -222,6 +262,7 @@ export async function getAdminAnalytics(): Promise<AdminAnalytics> {
       revenue: point.revenue,
       orders: point.orders,
     })),
+    currentMonthSales,
     statusBreakdown,
     topProducts: Array.from(productTotals.values())
       .sort((left, right) => right.unitsSold - left.unitsSold || right.revenue - left.revenue)

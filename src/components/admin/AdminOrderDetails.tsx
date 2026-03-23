@@ -33,12 +33,35 @@ function getActionLabel(status: Order["status"]) {
   }
 }
 
+function getConfirmationMessage(status: Order["status"]) {
+  switch (status) {
+    case "Confirmed":
+      return "Confirm this order and reserve inventory?";
+    case "Packed":
+      return "Mark this order as packed?";
+    case "Shipped":
+      return "Mark this order as shipped and notify the customer?";
+    case "Delivered":
+      return "Mark this order as delivered?";
+    case "Cancelled":
+      return "Cancel this order? Inventory will be released if it was already reserved.";
+    default:
+      return `Update this order to ${status}?`;
+  }
+}
+
 export function AdminOrderDetails({ order }: { order: Order }) {
   const [currentOrder, setCurrentOrder] = useState(order);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   async function updateStatus(status: Order["status"]) {
+    const confirmed = window.confirm(getConfirmationMessage(status));
+
+    if (!confirmed) {
+      return;
+    }
+
     setSaving(true);
     setMessage(null);
     const supabase = getSupabaseBrowserClient();
@@ -122,9 +145,15 @@ export function AdminOrderDetails({ order }: { order: Order }) {
           <span>{formatPrice(currentOrder.total)}</span>
         </div>
       </div>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-nowrap gap-1.5 overflow-x-auto pb-1">
         {(nextActions[currentOrder.status] ?? []).map((status) => (
-          <Button key={status} variant="secondary" disabled={saving} onClick={() => updateStatus(status)}>
+          <Button
+            key={status}
+            variant="secondary"
+            className="shrink-0 px-3 py-1.5 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] hover:border-black/15 hover:bg-black hover:text-white"
+            disabled={saving}
+            onClick={() => updateStatus(status)}
+          >
             {getActionLabel(status)}
           </Button>
         ))}
