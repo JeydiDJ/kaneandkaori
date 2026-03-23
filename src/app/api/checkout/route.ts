@@ -6,10 +6,21 @@ import { createSupabaseAdminClient } from "@/lib/supabase";
 
 type CheckoutItem = {
   productId: string;
-  name: string;
-  price: number;
   quantity: number;
 };
+
+type ProductRow = {
+  id: string;
+  name: string;
+  price: number | string;
+  inventory: number;
+};
+
+const MAX_ITEM_QUANTITY = 20;
+
+function isValidQuantity(quantity: number) {
+  return Number.isInteger(quantity) && quantity > 0 && quantity <= MAX_ITEM_QUANTITY;
+}
 
 export async function POST(request: Request) {
   try {
@@ -33,12 +44,86 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
     }
 
-    const subtotal = body.items.reduce(
-      (sum, item) => sum + Number(item.price) * Number(item.quantity),
-      0,
-    );
+    const normalizedItems = body.items
+      .map((item) => ({
+        productId: String(item.productId ?? "").trim(),
+        quantity: Number(item.quantity),
+      }))
+      .filter((item) => item.productId);
+
+    if (normalizedItems.length === 0) {
+      return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
+    }
+
+    for (const item of normalizedItems) {
+      if (!isValidQuantity(item.quantity)) {
+        return NextResponse.json(
+          { error: `Each item quantity must be between 1 and ${MAX_ITEM_QUANTITY}.` },
+          { status: 400 },
+        );
+      }
+    }
 
     const supabase = createSupabaseAdminClient();
+    const productIds = Array.from(new Set(normalizedItems.map((item) => item.productId)));
+    const { data: products, error: productsError } = await supabase
+      .from("products")
+      .select("id, name, price, inventory")
+      .in("id", productIds)
+      .eq("is_active", true);
+
+    if (productsError) {
+      return NextResponse.json({ error: productsError.message }, { status: 500 });
+    }
+
+    const productMap = new Map((products as ProductRow[]).map((product) => [product.id, product]));
+    const inventoryDemand = new Map<string, number>();
+
+    for (const item of normalizedItems) {
+      const product = productMap.get(item.productId);
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "One or more products are no longer available." },
+          { status: 400 },
+        );
+      }
+
+      inventoryDemand.set(item.productId, (inventoryDemand.get(item.productId) ?? 0) + item.quantity);
+    }
+
+    for (const [productId, quantity] of inventoryDemand.entries()) {
+      const product = productMap.get(productId);
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "One or more products are no longer available." },
+          { status: 400 },
+        );
+      }
+
+      if (Number(product.inventory ?? 0) < quantity) {
+        return NextResponse.json(
+          { error: `Not enough stock for ${product.name}. Only ${product.inventory} left.` },
+          { status: 400 },
+        );
+      }
+    }
+
+    const orderItems = normalizedItems.map((item) => {
+      const product = productMap.get(item.productId)!;
+      const price = Number(product.price ?? 0);
+
+      return {
+        product_id: product.id,
+        product_name: product.name,
+        price,
+        quantity: item.quantity,
+        line_total: price * item.quantity,
+      };
+    });
+
+    const subtotal = orderItems.reduce((sum, item) => sum + item.line_total, 0);
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
@@ -70,22 +155,18 @@ export async function POST(request: Request) {
       );
     }
 
-    const orderItems = body.items.map((item) => ({
-      order_id: order.id,
-      product_id: item.productId || null,
-      product_name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      line_total: item.price * item.quantity,
-    }));
-
     const { error: itemsError } = await supabase.from("order_items").insert(
-      orderItems,
+      orderItems.map((item) => ({
+        order_id: order.id,
+        ...item,
+      })),
     );
 
     if (itemsError) {
+      await supabase.from("orders").delete().eq("id", order.id);
+
       return NextResponse.json(
-        { error: itemsError.message, orderId: order.id },
+        { error: "Could not save order items. Please try again." },
         { status: 500 },
       );
     }

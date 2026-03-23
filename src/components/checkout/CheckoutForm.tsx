@@ -52,7 +52,10 @@ export function CheckoutForm() {
         paymentMethod,
         paymentReference: String(formData.get("paymentReference") ?? ""),
         notes: String(formData.get("notes") ?? ""),
-        items,
+        items: items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
       }),
     });
 

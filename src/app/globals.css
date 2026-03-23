@@ -63,6 +63,28 @@ img {
   padding: 2.25rem 1rem;
 }
 
+.studio-shell {
+  max-width: 96rem;
+}
+
+.studio-scroll-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(160px, 1fr);
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+}
+
+.studio-scroll-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.studio-scroll-row::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 9999px;
+}
+
 .kk-panel {
   border: 1px solid rgba(255, 255, 255, 0.72);
   background: rgba(255, 255, 255, 0.8);
@@ -385,8 +407,22 @@ img {
   }
 }
 
+@media (min-width: 1536px) {
+  .studio-scroll-row {
+    grid-auto-flow: initial;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+}
+
 @media (max-width: 640px) {
   .kk-foundation {
     min-height: 14.5rem;
+  }
+
+  .studio-shell {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
   }
 }

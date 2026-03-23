@@ -30,6 +30,7 @@ type CartContextValue = {
 };
 
 const STORAGE_KEY = "kk_cart";
+const MAX_ITEM_QUANTITY = 20;
 
 const CartContext = createContext<CartContextValue | null>(null);
 
@@ -64,7 +65,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const existing = current.find((item) => item.productId === product.id);
       if (existing) {
         return current.map((item) =>
-          item.productId === product.id ? { ...item, quantity: item.quantity + 1 } : item,
+          item.productId === product.id
+            ? { ...item, quantity: Math.min(MAX_ITEM_QUANTITY, item.quantity + 1) }
+            : item,
         );
       }
 
@@ -92,7 +95,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   function updateQuantity(productId: string, quantity: number) {
     setItems((current) =>
       current
-        .map((item) => (item.productId === productId ? { ...item, quantity } : item))
+        .map((item) =>
+          item.productId === productId
+            ? { ...item, quantity: Math.min(MAX_ITEM_QUANTITY, Math.max(0, quantity)) }
+            : item,
+        )
         .filter((item) => item.quantity > 0),
     );
   }

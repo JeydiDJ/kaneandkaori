@@ -9,6 +9,30 @@ import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { formatOrderReference, formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
+const nextActions: Partial<Record<Order["status"], Order["status"][]>> = {
+  Pending: ["Confirmed", "Cancelled"],
+  Confirmed: ["Packed", "Cancelled"],
+  Packed: ["Shipped", "Cancelled"],
+  Shipped: ["Delivered"],
+};
+
+function getActionLabel(status: Order["status"]) {
+  switch (status) {
+    case "Confirmed":
+      return "Confirm";
+    case "Packed":
+      return "Pack";
+    case "Shipped":
+      return "Ship";
+    case "Delivered":
+      return "Deliver";
+    case "Cancelled":
+      return "Cancel";
+    default:
+      return status;
+  }
+}
+
 export function AdminOrderDetails({ order }: { order: Order }) {
   const [currentOrder, setCurrentOrder] = useState(order);
   const [saving, setSaving] = useState(false);
@@ -99,10 +123,11 @@ export function AdminOrderDetails({ order }: { order: Order }) {
         </div>
       </div>
       <div className="flex flex-wrap gap-3">
-        <Button variant="secondary" disabled={saving} onClick={() => updateStatus("Confirmed")}>Confirm</Button>
-        <Button variant="secondary" disabled={saving} onClick={() => updateStatus("Packed")}>Pack</Button>
-        <Button variant="secondary" disabled={saving} onClick={() => updateStatus("Shipped")}>Ship</Button>
-        <Button variant="secondary" disabled={saving} onClick={() => updateStatus("Delivered")}>Deliver</Button>
+        {(nextActions[currentOrder.status] ?? []).map((status) => (
+          <Button key={status} variant="secondary" disabled={saving} onClick={() => updateStatus(status)}>
+            {getActionLabel(status)}
+          </Button>
+        ))}
       </div>
     </div>
   );

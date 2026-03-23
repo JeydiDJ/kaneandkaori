@@ -9,6 +9,30 @@ import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { formatOrderReference, formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
+const nextActions: Partial<Record<Order["status"], Order["status"][]>> = {
+  Pending: ["Confirmed", "Cancelled"],
+  Confirmed: ["Packed", "Cancelled"],
+  Packed: ["Shipped", "Cancelled"],
+  Shipped: ["Delivered"],
+};
+
+function getActionLabel(status: Order["status"]) {
+  switch (status) {
+    case "Confirmed":
+      return "Confirm";
+    case "Packed":
+      return "Pack";
+    case "Shipped":
+      return "Ship";
+    case "Delivered":
+      return "Deliver";
+    case "Cancelled":
+      return "Cancel";
+    default:
+      return status;
+  }
+}
+
 export function OrderTable({ orders }: { orders: Order[] }) {
   const [localOrders, setLocalOrders] = useState(orders);
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -83,8 +107,17 @@ export function OrderTable({ orders }: { orders: Order[] }) {
                 <td className="px-5 py-4">
                   <div className="flex flex-wrap gap-2">
                     <Link href={`/studio/orders/${order.id}`} className="rounded-full border border-[var(--border)] bg-white/75 px-3 py-2 font-medium transition hover:bg-[var(--surface)]/75">View</Link>
-                    <Button variant="secondary" className="px-3 py-2" disabled={savingId === order.id} onClick={() => updateStatus(order.id, "Confirmed")}>Confirm</Button>
-                    <Button variant="secondary" className="px-3 py-2" disabled={savingId === order.id} onClick={() => updateStatus(order.id, "Shipped")}>Ship</Button>
+                    {(nextActions[order.status] ?? []).map((status) => (
+                      <Button
+                        key={status}
+                        variant="secondary"
+                        className="px-3 py-2"
+                        disabled={savingId === order.id}
+                        onClick={() => updateStatus(order.id, status)}
+                      >
+                        {getActionLabel(status)}
+                      </Button>
+                    ))}
                   </div>
                 </td>
               </tr>

@@ -1,4 +1,5 @@
 import { formatOrderReference, formatPrice } from "@/lib/utils";
+import type { OrderStatus } from "@/types/order";
 
 type EmailPayload = {
   to: string | string[];
@@ -129,6 +130,72 @@ export async function sendShippedOrderEmail(order: OrderEmailData) {
       <h3>Items</h3>
       <ul>${renderItems(order.items)}</ul>
       <p>We will contact you if there are any delivery updates.</p>
+    `,
+  });
+}
+
+function getStatusEmailCopy(status: OrderStatus) {
+  switch (status) {
+    case "Confirmed":
+      return {
+        subject: "has been confirmed",
+        heading: "Your order has been confirmed",
+        intro:
+          "We have received your order and the team is now preparing it for fulfillment.",
+        closing: "We’ll email you again once your order has been packed or shipped.",
+      };
+    case "Packed":
+      return {
+        subject: "is packed and ready",
+        heading: "Your order is packed",
+        intro: "Your Kane & Kaori order has been packed and is queued for dispatch.",
+        closing: "We’ll send another update as soon as it is shipped.",
+      };
+    case "Shipped":
+      return {
+        subject: "has shipped",
+        heading: "Your order is on the way",
+        intro: "Your Kane & Kaori order has been marked as shipped.",
+        closing: "We will contact you if there are any delivery updates.",
+      };
+    case "Delivered":
+      return {
+        subject: "has been delivered",
+        heading: "Your order has been delivered",
+        intro: "Your Kane & Kaori order has been marked as delivered.",
+        closing: "We hope you enjoy your fragrance. Thank you for ordering with us.",
+      };
+    default:
+      return null;
+  }
+}
+
+export async function sendOrderStatusEmail(order: OrderEmailData, status: OrderStatus) {
+  if (!order.email) {
+    return;
+  }
+
+  const copy = getStatusEmailCopy(status);
+
+  if (!copy) {
+    return;
+  }
+
+  const reference = formatOrderReference(order.orderId);
+
+  await sendEmail({
+    to: order.email,
+    subject: `Your Kane & Kaori order ${reference} ${copy.subject}`,
+    html: `
+      <h2>${copy.heading}</h2>
+      <p>Hi ${order.customerName},</p>
+      <p>${copy.intro}</p>
+      <p><strong>Reference:</strong> ${reference}</p>
+      <p><strong>Status:</strong> ${status}</p>
+      <p><strong>Total:</strong> ${formatPrice(order.total)}</p>
+      <h3>Items</h3>
+      <ul>${renderItems(order.items)}</ul>
+      <p>${copy.closing}</p>
     `,
   });
 }

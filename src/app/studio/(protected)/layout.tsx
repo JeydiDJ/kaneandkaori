@@ -4,10 +4,10 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <AdminGate>
-      <section className="section-wrap">
-        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+      <section className="section-wrap studio-shell">
+        <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-8">
           <AdminSidebar />
-          <div>{children}</div>
+          <div className="min-w-0">{children}</div>
         </div>
       </section>
     </AdminGate>
