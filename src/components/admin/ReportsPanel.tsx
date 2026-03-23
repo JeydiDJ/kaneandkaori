@@ -32,6 +32,7 @@ function formatMetricValue(label: string, value: number) {
 export function ReportsPanel() {
   const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [chartType, setChartType] = useState<"bar" | "line">("bar");
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -78,6 +79,11 @@ export function ReportsPanel() {
 
   const maxRevenue = Math.max(...analytics.monthlySales.map((entry) => entry.revenue), 1);
   const maxUnits = Math.max(...analytics.topProducts.map((entry) => entry.unitsSold), 1);
+  const chartPoints = analytics.monthlySales.map((month, index) => {
+    const x = analytics.monthlySales.length === 1 ? 50 : (index / (analytics.monthlySales.length - 1)) * 100;
+    const y = 100 - (month.revenue / maxRevenue) * 100;
+    return `${x},${Number.isFinite(y) ? y : 100}`;
+  });
 
   return (
     <div className="grid gap-6">
@@ -110,25 +116,80 @@ export function ReportsPanel() {
             </div>
           </div>
           <div className="mt-6 rounded-[1.9rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(243,237,225,0.92))] p-4 sm:p-5">
-            <div className="overflow-x-auto pb-2">
-              <div className="flex min-w-[680px] items-end gap-3 sm:gap-4">
-                {analytics.monthlySales.map((month) => (
-                  <div key={month.label} className="flex min-w-[92px] flex-1 flex-col justify-end">
-                    <div className="flex h-56 items-end rounded-[1.4rem] bg-white/55 p-2 sm:h-64 sm:p-3">
-                      <div
-                        className="w-full rounded-[1rem] bg-[linear-gradient(180deg,#000000,#3b3b3b)] shadow-[0_14px_24px_rgba(0,0,0,0.16)]"
-                        style={{
-                          height: `${Math.max((month.revenue / maxRevenue) * 100, month.revenue > 0 ? 14 : 6)}%`,
-                        }}
-                      />
-                    </div>
-                    <p className="mt-3 text-sm font-semibold">{month.label}</p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(month.revenue)}</p>
-                    <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{month.orders} orders</p>
-                  </div>
-                ))}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-[var(--muted)]">Switch the chart style for whichever view is easier to read.</p>
+              <div className="inline-flex rounded-full border border-black/10 bg-white/80 p-1">
+                <button
+                  type="button"
+                  className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "bar" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                  onClick={() => setChartType("bar")}
+                >
+                  Bar
+                </button>
+                <button
+                  type="button"
+                  className={`rounded-full px-3 py-2 text-sm font-medium ${chartType === "line" ? "bg-black text-white" : "text-[var(--muted)]"}`}
+                  onClick={() => setChartType("line")}
+                >
+                  Line
+                </button>
               </div>
             </div>
+            {chartType === "bar" ? (
+              <div className="mt-5 overflow-x-auto pb-2">
+                <div className="flex min-w-[680px] items-end gap-3 sm:gap-4">
+                  {analytics.monthlySales.map((month) => (
+                    <div key={month.label} className="flex min-w-[92px] flex-1 flex-col justify-end">
+                      <div className="flex h-56 items-end rounded-[1.4rem] bg-white/55 p-2 sm:h-64 sm:p-3">
+                        <div
+                          className="w-full rounded-[1rem] bg-[linear-gradient(180deg,#000000,#3b3b3b)] shadow-[0_14px_24px_rgba(0,0,0,0.16)]"
+                          style={{
+                            height: `${Math.max((month.revenue / maxRevenue) * 100, month.revenue > 0 ? 14 : 6)}%`,
+                          }}
+                        />
+                      </div>
+                      <p className="mt-3 text-sm font-semibold">{month.label}</p>
+                      <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(month.revenue)}</p>
+                      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{month.orders} orders</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="mt-5 overflow-x-auto pb-2">
+                <div className="min-w-[680px]">
+                  <div className="h-64 rounded-[1.6rem] bg-white/55 p-4">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full overflow-visible">
+                      <line x1="0" y1="100" x2="100" y2="100" stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" />
+                      <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(0,0,0,0.1)" strokeWidth="0.6" />
+                      <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(0,0,0,0.1)" strokeWidth="0.6" />
+                      <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(0,0,0,0.1)" strokeWidth="0.6" />
+                      <polyline
+                        fill="none"
+                        stroke="#111111"
+                        strokeWidth="2.2"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        points={chartPoints.join(" ")}
+                      />
+                      {chartPoints.map((point) => {
+                        const [cx, cy] = point.split(",");
+                        return <circle key={point} cx={cx} cy={cy} r="2.2" fill="#111111" />;
+                      })}
+                    </svg>
+                  </div>
+                  <div className="mt-4 grid grid-cols-6 gap-3 sm:gap-4">
+                    {analytics.monthlySales.map((month) => (
+                      <div key={month.label} className="min-w-0">
+                        <p className="text-sm font-semibold">{month.label}</p>
+                        <p className="mt-1 text-sm text-[var(--muted)]">{formatPrice(month.revenue)}</p>
+                        <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{month.orders} orders</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
