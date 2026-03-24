@@ -50,10 +50,16 @@ export default async function Home() {
                   At Kane & Kaori, scent is a quiet compass. Each blend is shaped to hold memory, mark growth, and bring clarity to everyday rituals.
                 </p>
                 <div className="mt-9 flex flex-wrap gap-3">
-                  <Link href="/products" className="kk-hero-cta kk-hero-cta-dark rounded-full px-5 py-2.5 text-sm font-semibold sm:px-7 sm:py-3">
+                  <Link
+                    href="/products"
+                    className="inline-flex min-h-13 items-center justify-center rounded-full border border-[#3d3833] bg-[#3d3833] px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-[#f8f3eb] shadow-[0_12px_28px_rgba(0,0,0,0.14)] transition-all duration-200 hover:-translate-y-px hover:border-[#000000] hover:bg-[#000000] hover:text-[#fff8ef] hover:shadow-[0_18px_36px_rgba(0,0,0,0.24)] sm:px-7 sm:py-3"
+                  >
                     Explore the collection
                   </Link>
-                  <a href="#philosophy" className="kk-hero-cta kk-hero-cta-light rounded-full px-5 py-2.5 text-sm font-semibold sm:px-7 sm:py-3">
+                  <a
+                    href="#philosophy"
+                    className="inline-flex min-h-13 items-center justify-center rounded-full border border-[#b99667] bg-transparent px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-[#8f6c3f] shadow-none transition-all duration-200 hover:-translate-y-px hover:border-[#cda87a] hover:bg-[#cda87a] hover:text-[#18110b] hover:shadow-[0_16px_30px_rgba(122,90,49,0.16)] sm:px-7 sm:py-3"
+                  >
                     Read our philosophy
                   </a>
                 </div>

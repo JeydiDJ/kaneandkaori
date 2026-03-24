@@ -323,67 +323,6 @@ img {
   animation-fill-mode: forwards;
 }
 
-.kk-hero-cta {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3.25rem;
-  opacity: 1;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  background-image: none;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition:
-    color 240ms ease,
-    border-color 240ms ease,
-    background-color 240ms ease,
-    box-shadow 240ms ease,
-    transform 220ms ease;
-}
-
-.kk-hero-cta-dark {
-  color: #f8f2e8;
-  border: 1px solid #17120d;
-  background-color: #120f0d;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.16);
-}
-
-.kk-hero-cta-light {
-  color: #241d15;
-  border: 1px solid #d5c4a9;
-  background-color: #eadfcf;
-  box-shadow: 0 10px 24px rgba(102, 78, 44, 0.08);
-}
-
-.kk-hero-cta:hover,
-.kk-hero-cta:focus-visible {
-  transform: translateY(-1px) scale(1.01);
-}
-
-.kk-hero-cta-dark:hover,
-.kk-hero-cta-dark:focus-visible {
-  color: #fff8ee;
-  border-color: #33261b;
-  background-color: #241a13;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
-}
-
-.kk-hero-cta-light:hover,
-.kk-hero-cta-light:focus-visible {
-  color: #1e1710;
-  border-color: #c3af90;
-  background-color: #f0e6d8;
-  box-shadow: 0 14px 28px rgba(129, 102, 63, 0.12);
-}
-
-.kk-hero-cta:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.68),
-    0 0 0 4px rgba(0, 0, 0, 0.1);
-}
 @keyframes kkFadeUp {
   from {
     opacity: 0;
@@ -605,6 +544,7 @@ img {
     transform: translate3d(3%, 0, 0) scale(1.68) rotate(9deg);
   }
 }
+
 
 
 
