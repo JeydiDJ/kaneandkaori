@@ -248,6 +248,36 @@ img {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
 }
 
+.kk-hero-bottle {
+  position: absolute;
+  left: clamp(-28rem, -16vw, -10rem);
+  top: clamp(-8rem, -1vh, 0rem);
+  z-index: 1;
+  width: min(68rem, 88vw);
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.kk-hero-bottle::before {
+  content: "";
+  position: absolute;
+  inset: auto 6% 6% 0;
+  height: 10rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0) 72%);
+  filter: blur(26px);
+}
+
+.kk-hero-bottle-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: blur(9px) saturate(0.92);
+  transform: translate3d(0, 0, 0) scale(1.62) rotate(7deg);
+  transform-origin: center;
+  mix-blend-mode: multiply;
+}
+
 .kk-foundation-stage {
   animation: kkFoundationIn 520ms ease both;
 }
@@ -388,6 +418,14 @@ img {
   .kk-float-blob-5 {
     animation: uiDrift 11s ease-in-out infinite;
   }
+
+  .kk-hero-bottle {
+    animation: heroBottleDrift 19s ease-in-out infinite alternate;
+  }
+
+  .kk-hero-bottle-image {
+    animation: heroBottleFocus 19s ease-in-out infinite alternate;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -421,8 +459,60 @@ img {
     min-height: 14.5rem;
   }
 
+  .kk-hero-bottle {
+    left: -13rem;
+    top: 4rem;
+    width: min(34rem, 118vw);
+    opacity: 0.2;
+  }
+
   .studio-shell {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
+  }
+}
+
+@keyframes heroBottleDrift {
+  0% {
+    transform: translate3d(-2%, -2%, 0);
+  }
+  50% {
+    transform: translate3d(7%, 3%, 0);
+  }
+  100% {
+    transform: translate3d(12%, -1%, 0);
+  }
+}
+
+@keyframes heroBottleFocus {
+  0% {
+    filter: blur(10px) saturate(0.88);
+    opacity: 0.86;
+    transform: translate3d(0, 0, 0) scale(1.58) rotate(6deg);
+  }
+  22% {
+    filter: blur(6px) saturate(0.92);
+    opacity: 0.92;
+    transform: translate3d(0.5%, 0.5%, 0) scale(1.61) rotate(7deg);
+  }
+  42% {
+    filter: blur(0px) saturate(1.02);
+    opacity: 1;
+    transform: translate3d(1%, 1%, 0) scale(1.65) rotate(8deg);
+  }
+  54% {
+    filter: blur(1px) saturate(1);
+    opacity: 1;
+    transform: translate3d(1.4%, 0.5%, 0) scale(1.66) rotate(8deg);
+  }
+  72% {
+    filter: blur(7px) saturate(0.92);
+    opacity: 0.9;
+    transform: translate3d(2%, -1%, 0) scale(1.62) rotate(5deg);
+  }
+  100% {
+    filter: blur(3px) saturate(0.98);
+    opacity: 0.96;
+    transform: translate3d(3%, 0, 0) scale(1.68) rotate(9deg);
   }
 }

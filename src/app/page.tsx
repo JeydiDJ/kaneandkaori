@@ -1,12 +1,14 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
+import heroPerfume from "@/assets/hero-assets/hero-perfume.png";
 import { FoundationReel } from "@/components/home/FoundationReel";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { getFeaturedProducts } from "@/services/productService";
 
-const IKIGAI = "Ikigai (\u751f\u304d\u7532\u6590)";
-const KAIZEN = "Kaizen (\u6539\u5584)";
+const IKIGAI = "Ikigai (生き甲斐)";
+const KAIZEN = "Kaizen (改善)";
 
 export const metadata: Metadata = {
   title: "Kane & Kaori | Fragrance for Becoming",
@@ -30,6 +32,9 @@ export default async function Home() {
       <section className="kk-hero-stage">
         <div className="kk-orb kk-orb-1" aria-hidden />
         <div className="kk-orb kk-orb-2" aria-hidden />
+        <div className="kk-hero-bottle" aria-hidden>
+          <Image src={heroPerfume} alt="" className="kk-hero-bottle-image" priority />
+        </div>
         <div className="section-wrap relative z-10 flex min-h-[78vh] items-center py-12 md:min-h-[88vh] md:py-20">
           <div className="grid w-full gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div className="kk-fade-up">
@@ -108,5 +113,3 @@ export default async function Home() {
     </div>
   );
 }
-
-
