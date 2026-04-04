@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/checkout", "/cart", "/studio", "/studio/", "/api/"],
       },
     ],
-    sitemap: `${getSiteUrl()}/sitemap-main.xml`,
+    sitemap: `${getSiteUrl()}/sitemap.xml`,
   };
 }
