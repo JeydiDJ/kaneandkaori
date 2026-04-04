@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { getSupabaseBrowserClient } from "@/lib/supabase";
+import { fetchAdminJson } from "@/lib/admin-client";
 import { formatPrice } from "@/lib/utils";
 import type { AdminAnalytics } from "@/types/admin";
 
@@ -26,27 +26,13 @@ export function AdminDashboardOverview() {
   const [chartRange, setChartRange] = useState<"six-months" | "this-month">("six-months");
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-
     async function load() {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      const response = await fetch("/api/admin/reports", {
-        headers: {
-          Authorization: `Bearer ${session?.access_token ?? ""}`,
-        },
-      });
-
-      const data = (await response.json()) as AdminAnalytics | { error?: string };
-
-      if (!response.ok) {
+      try {
+        const data = await fetchAdminJson<AdminAnalytics>("/api/admin/reports");
+        setAnalytics(data);
+      } catch {
         setError("Could not load admin analytics right now.");
-        return;
       }
-
-      setAnalytics(data as AdminAnalytics);
     }
 
     void load();

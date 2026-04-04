@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import { fetchAdminJson } from "@/lib/admin-client";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { Button } from "@/components/ui/Button";
-import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { formatOrderReference, formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
@@ -107,31 +107,29 @@ export function AdminOrderDetails({ order }: { order: Order }) {
 
     setSaving(true);
     setMessage(null);
-    const supabase = getSupabaseBrowserClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    try {
+      await fetchAdminJson<{ ok: true; status: Order["status"] }>(
+        `/api/orders/${currentOrder.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+        },
+      );
 
-    const response = await fetch(`/api/orders/${currentOrder.id}/status`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.access_token ?? ""}`,
-      },
-      body: JSON.stringify({ status }),
-    });
-
-    const data = (await response.json()) as { error?: string };
-
-    if (!response.ok) {
-      setMessage(data.error ?? "Could not update the order status.");
+      setCurrentOrder((existing) => ({ ...existing, status }));
+      setMessage(`Order ${formatOrderReference(currentOrder.id)} marked as ${status}.`);
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not update the order status.",
+      );
+    } finally {
       setSaving(false);
-      return;
     }
-
-    setCurrentOrder((existing) => ({ ...existing, status }));
-    setMessage(`Order ${formatOrderReference(currentOrder.id)} marked as ${status}.`);
-    setSaving(false);
   }
 
   return (

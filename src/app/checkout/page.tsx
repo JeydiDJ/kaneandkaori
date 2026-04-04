@@ -1,11 +1,14 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Checkout | Kane & Kaori",
   description: "Complete your Kane & Kaori fragrance order with secure guest checkout and delivery details.",
-};
+  path: "/checkout",
+  noIndex: true,
+});
 
 export default function CheckoutPage() {
   return (
@@ -19,4 +22,3 @@ export default function CheckoutPage() {
     </section>
   );
 }
-

@@ -1,9 +1,12 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
   title: "Returns | Kane & Kaori",
   description: "Return and exchange policy for Kane & Kaori fragrance orders.",
-};
+  path: "/returns",
+});
 
 export default function ReturnsPage() {
   return (
@@ -21,5 +24,3 @@ export default function ReturnsPage() {
     </section>
   );
 }
-
-

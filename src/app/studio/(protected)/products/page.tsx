@@ -4,29 +4,50 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { getSupabaseBrowserClient } from "@/lib/supabase";
+import { fetchAdminJson } from "@/lib/admin-client";
 import { mapProductRow } from "@/lib/supabase-mappers";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/types/product";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-
     async function load() {
-      const { data } = await supabase
-        .from("products")
-        .select("*")
-        .order("featured", { ascending: false })
-        .order("created_at", { ascending: false });
-
-      setProducts((data ?? []).map((row) => mapProductRow(row)));
+      try {
+        const data = await fetchAdminJson<unknown[]>("/api/admin/products");
+        setProducts((data ?? []).map((row) => mapProductRow(row as never)));
+      } catch (loadError) {
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Could not load products right now.",
+        );
+      } finally {
+        setLoading(false);
+      }
     }
 
     void load();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="rounded-[2rem] border border-white/70 bg-white/85 p-6 text-[var(--muted)]">
+        Loading products...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-[2rem] border border-white/70 bg-white/85 p-6 text-[var(--muted)]">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-6">

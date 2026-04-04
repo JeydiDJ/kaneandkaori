@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { sendNewOrderNotification } from "@/lib/email";
+import { applyInventoryAdjustments } from "@/lib/inventory";
 import { toOrderEmailData } from "@/lib/order-email-data";
 import { createSupabaseAdminClient } from "@/lib/supabase";
 
@@ -92,24 +93,6 @@ export async function POST(request: Request) {
       inventoryDemand.set(item.productId, (inventoryDemand.get(item.productId) ?? 0) + item.quantity);
     }
 
-    for (const [productId, quantity] of inventoryDemand.entries()) {
-      const product = productMap.get(productId);
-
-      if (!product) {
-        return NextResponse.json(
-          { error: "One or more products are no longer available." },
-          { status: 400 },
-        );
-      }
-
-      if (Number(product.inventory ?? 0) < quantity) {
-        return NextResponse.json(
-          { error: `Not enough stock for ${product.name}. Only ${product.inventory} left.` },
-          { status: 400 },
-        );
-      }
-    }
-
     const orderItems = normalizedItems.map((item) => {
       const product = productMap.get(item.productId)!;
       const price = Number(product.price ?? 0);
@@ -124,6 +107,19 @@ export async function POST(request: Request) {
     });
 
     const subtotal = orderItems.reduce((sum, item) => sum + item.line_total, 0);
+    const inventoryResult = await applyInventoryAdjustments(
+      supabase,
+      orderItems.map((item) => ({
+        productId: item.product_id,
+        quantity: item.quantity,
+      })),
+      "reserve",
+    );
+
+    if (!inventoryResult.ok) {
+      return NextResponse.json({ error: inventoryResult.error }, { status: 409 });
+    }
+
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
@@ -142,6 +138,7 @@ export async function POST(request: Request) {
         subtotal,
         shipping_fee: 0,
         total_amount: subtotal,
+        status: "Confirmed",
       })
       .select(
         "id, customer_name, email, phone, address_line, barangay, city_municipality, province, postal_code, country, payment_method, payment_reference, notes, total_amount",
@@ -149,6 +146,15 @@ export async function POST(request: Request) {
       .single();
 
     if (orderError || !order) {
+      await applyInventoryAdjustments(
+        supabase,
+        orderItems.map((item) => ({
+          productId: item.product_id,
+          quantity: item.quantity,
+        })),
+        "release",
+      );
+
       return NextResponse.json(
         { error: orderError?.message ?? "Could not create order." },
         { status: 500 },
@@ -164,6 +170,14 @@ export async function POST(request: Request) {
 
     if (itemsError) {
       await supabase.from("orders").delete().eq("id", order.id);
+      await applyInventoryAdjustments(
+        supabase,
+        orderItems.map((item) => ({
+          productId: item.product_id,
+          quantity: item.quantity,
+        })),
+        "release",
+      );
 
       return NextResponse.json(
         { error: "Could not save order items. Please try again." },

@@ -34,56 +34,62 @@ export function CheckoutForm() {
     const paymentMethod = String(formData.get("paymentMethod") ?? "GCash");
     const customerName = String(formData.get("customerName") ?? "");
 
-    const response = await fetch("/api/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        customerName,
-        email: String(formData.get("email") ?? ""),
-        phone: String(formData.get("phone") ?? ""),
-        address: String(formData.get("address") ?? ""),
-        barangay: String(formData.get("barangay") ?? ""),
-        city: String(formData.get("city") ?? ""),
-        province: String(formData.get("province") ?? ""),
-        postalCode: String(formData.get("postalCode") ?? ""),
-        country: String(formData.get("country") ?? "Philippines"),
-        paymentMethod,
-        paymentReference: String(formData.get("paymentReference") ?? ""),
-        notes: String(formData.get("notes") ?? ""),
-        items: items.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-        })),
-      }),
-    });
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerName,
+          email: String(formData.get("email") ?? ""),
+          phone: String(formData.get("phone") ?? ""),
+          address: String(formData.get("address") ?? ""),
+          barangay: String(formData.get("barangay") ?? ""),
+          city: String(formData.get("city") ?? ""),
+          province: String(formData.get("province") ?? ""),
+          postalCode: String(formData.get("postalCode") ?? ""),
+          country: String(formData.get("country") ?? "Philippines"),
+          paymentMethod,
+          paymentReference: String(formData.get("paymentReference") ?? ""),
+          notes: String(formData.get("notes") ?? ""),
+          items: items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+        }),
+      });
 
-    const data = (await response.json()) as {
-      error?: string;
-      orderId?: string;
-      total?: number;
-      paymentMethod?: string;
-      customerName?: string;
-    };
+      const data = (await response.json()) as {
+        error?: string;
+        orderId?: string;
+        total?: number;
+        paymentMethod?: string;
+        customerName?: string;
+      };
 
-    if (!response.ok || !data.orderId) {
-      setMessage(data.error ?? "We could not place the order. Please try again.");
+      if (!response.ok || !data.orderId) {
+        setMessage(data.error ?? "We could not place the order. Please try again.");
+        return;
+      }
+
+      clearCart();
+      setReceipt({
+        orderId: data.orderId,
+        customerName: data.customerName ?? customerName,
+        paymentMethod: data.paymentMethod ?? paymentMethod,
+        total: data.total ?? total,
+      });
+      setMessage("Order placed successfully. We have received your request and will begin preparing it.");
+      form.reset();
+      router.refresh();
+    } catch {
+      setMessage(
+        "We could not reach the checkout service. Please check your connection and try again.",
+      );
+    } finally {
       setLoading(false);
-      return;
     }
-
-    clearCart();
-    setReceipt({
-      orderId: data.orderId,
-      customerName: data.customerName ?? customerName,
-      paymentMethod: data.paymentMethod ?? paymentMethod,
-      total: data.total ?? total,
-    });
-    setMessage("Order placed successfully. We have received your request and will begin preparing it.");
-    form.reset();
-    setLoading(false);
-    router.refresh();
   }
 
   if (receipt) {

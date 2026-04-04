@@ -1,9 +1,12 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
   title: "Privacy | Kane & Kaori",
   description: "How Kane & Kaori collects, uses, and protects customer information.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
@@ -17,5 +20,3 @@ export default function PrivacyPage() {
     </section>
   );
 }
-
-

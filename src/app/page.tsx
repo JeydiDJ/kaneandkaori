@@ -5,22 +5,40 @@ import Link from "next/link";
 import heroPerfume from "@/assets/hero-assets/hero-perfume.png";
 import { FoundationReel } from "@/components/home/FoundationReel";
 import { ProductGrid } from "@/components/products/ProductGrid";
+import { buildMetadata, getAbsoluteUrl } from "@/lib/seo";
 import { getFeaturedProducts } from "@/services/productService";
 
 const IKIGAI = "Ikigai (生き甲斐)";
 const KAIZEN = "Kaizen (改善)";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Kane & Kaori | Fragrance for Becoming",
   description:
     "Discover purposeful fragrances inspired by Ikigai (生き甲斐) and Kaizen (改善), crafted for memory, clarity, and everyday ritual.",
-};
+  path: "/",
+});
 
 export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Featured fragrances",
+    itemListElement: featuredProducts.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: getAbsoluteUrl(`/products/${product.slug}`),
+      name: product.name,
+    })),
+  };
 
   return (
     <div className="kk-landing-stage relative overflow-hidden">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       <div className="kk-landing-fx" aria-hidden>
         <span className="kk-float-blob kk-float-blob-1" />
         <span className="kk-float-blob kk-float-blob-2" />

@@ -1,9 +1,12 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
   title: "Contact | Kane & Kaori",
   description: "Contact Kane & Kaori for order support, shipping questions, and fragrance inquiries.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -20,5 +23,3 @@ export default function ContactPage() {
     </section>
   );
 }
-
-

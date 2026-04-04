@@ -1,9 +1,12 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
   title: "Shipping | Kane & Kaori",
   description: "Shipping timelines, processing details, and delivery information for Kane & Kaori orders.",
-};
+  path: "/shipping",
+});
 
 export default function ShippingPage() {
   return (
@@ -21,5 +24,3 @@ export default function ShippingPage() {
     </section>
   );
 }
-
-

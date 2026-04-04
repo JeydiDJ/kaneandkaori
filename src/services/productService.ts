@@ -1,6 +1,8 @@
+import "server-only";
+
 import { mapProductRow } from "@/lib/supabase-mappers";
 import { createSupabaseServerClient } from "@/lib/supabase";
-import type { Product, ProductInput } from "@/types/product";
+import type { ProductInput } from "@/types/product";
 
 function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -62,25 +64,20 @@ export async function getProductById(id: string) {
 }
 
 export async function createProduct(input: ProductInput) {
-  return {
-    id: "",
-    slug: "",
-    createdAt: "",
-    updatedAt: "",
-    ...input,
-  } as Product;
+  throw new Error(
+    `createProduct is not implemented in productService for "${input.name}". Use the admin product form flow instead.`,
+  );
 }
 
 export async function updateProduct(id: string, input: ProductInput) {
-  return {
-    id,
-    slug: "",
-    createdAt: "",
-    updatedAt: "",
-    ...input,
-  } as Product;
+  void input;
+  throw new Error(
+    `updateProduct is not implemented in productService for "${id}". Use the admin product form flow instead.`,
+  );
 }
 
 export async function deleteProduct(id: string) {
-  return id;
+  throw new Error(
+    `deleteProduct is not implemented in productService for "${id}". Add a dedicated admin delete flow before calling this.`,
+  );
 }

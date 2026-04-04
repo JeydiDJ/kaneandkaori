@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { getSupabaseBrowserClient } from "@/lib/supabase";
+import { fetchAdminJson } from "@/lib/admin-client";
 import { formatPrice } from "@/lib/utils";
 import type { AdminAnalytics } from "@/types/admin";
 
@@ -71,27 +71,13 @@ export function ReportsPanel() {
   const [isChartExpanded, setIsChartExpanded] = useState(false);
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-
     async function load() {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      const response = await fetch("/api/admin/reports", {
-        headers: {
-          Authorization: `Bearer ${session?.access_token ?? ""}`,
-        },
-      });
-
-      const data = (await response.json()) as AdminAnalytics | { error?: string };
-
-      if (!response.ok) {
-        setError((data as { error?: string }).error ?? "Could not load reports.");
-        return;
+      try {
+        const data = await fetchAdminJson<AdminAnalytics>("/api/admin/reports");
+        setAnalytics(data);
+      } catch (error) {
+        setError(error instanceof Error ? error.message : "Could not load reports.");
       }
-
-      setAnalytics(data as AdminAnalytics);
     }
 
     void load();
