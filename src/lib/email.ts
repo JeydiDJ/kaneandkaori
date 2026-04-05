@@ -7,6 +7,13 @@ type EmailPayload = {
   html: string;
 };
 
+type ContactEmailData = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
 type OrderEmailItem = {
   name: string;
   quantity: number;
@@ -44,6 +51,10 @@ function getNotificationEmail() {
   return process.env.ORDER_NOTIFICATION_EMAIL ?? "kaneandkaori@gmail.com";
 }
 
+function getContactNotificationEmail() {
+  return process.env.CONTACT_NOTIFICATION_EMAIL ?? getNotificationEmail();
+}
+
 function getFromEmail() {
   return process.env.ORDER_FROM_EMAIL ?? "Kane & Kaori <onboarding@resend.dev>";
 }
@@ -65,6 +76,15 @@ async function sendEmail(payload: EmailPayload) {
     const text = await response.text();
     throw new Error(`Resend error: ${text}`);
   }
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function renderItems(items: OrderEmailItem[]) {
@@ -107,6 +127,21 @@ export async function sendNewOrderNotification(order: OrderEmailData) {
       <p><strong>Order notes:</strong> ${order.notes || "None"}</p>
       <h3>Items</h3>
       <ul>${renderItems(order.items)}</ul>
+    `,
+  });
+}
+
+export async function sendContactFormNotification(contact: ContactEmailData) {
+  await sendEmail({
+    to: getContactNotificationEmail(),
+    subject: `New Contact Form: ${contact.subject}`,
+    html: `
+      <h2>New contact form submission</h2>
+      <p><strong>Name:</strong> ${escapeHtml(contact.name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(contact.email)}</p>
+      <p><strong>Subject:</strong> ${escapeHtml(contact.subject)}</p>
+      <p><strong>Message:</strong></p>
+      <p>${escapeHtml(contact.message).replace(/\n/g, "<br />")}</p>
     `,
   });
 }
