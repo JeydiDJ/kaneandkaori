@@ -51,7 +51,7 @@ export default function AdminOrdersPage() {
     <div className="grid gap-6">
       <div>
         <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Orders</p>
-        <h1 className="display-font mt-3 text-4xl md:text-5xl">Customer orders</h1>
+        <h1 className="display-font mt-3 text-3xl md:text-5xl">Customer orders</h1>
       </div>
       <OrderTable orders={orders} />
     </div>

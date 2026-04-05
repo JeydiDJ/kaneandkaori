@@ -72,7 +72,7 @@ export default function AdminBlogPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Editorial</p>
-          <h1 className="display-font mt-3 text-4xl md:text-5xl">Manage blog posts</h1>
+          <h1 className="display-font mt-3 text-3xl md:text-5xl">Manage blog posts</h1>
         </div>
         <Link
           href="/studio/blog/create"
@@ -105,17 +105,17 @@ export default function AdminBlogPage() {
                 </p>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--muted)]">{post.excerpt}</p>
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 md:justify-end">
                 <Link
                   href={`/studio/blog/edit/${post.id}`}
-                  className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-sm font-semibold transition hover:bg-[var(--surface)]/75"
+                  className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-center text-sm font-semibold transition hover:bg-[var(--surface)]/75"
                 >
                   Edit
                 </Link>
                 {post.isPublished ? (
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-sm font-semibold transition hover:bg-[var(--surface)]/75"
+                    className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-center text-sm font-semibold transition hover:bg-[var(--surface)]/75"
                   >
                     View live
                   </Link>

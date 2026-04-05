@@ -240,7 +240,51 @@ export function OrderTable({ orders }: { orders: Order[] }) {
         </div>
       </div>
       <div className="overflow-x-auto rounded-[2rem] border border-white/75 bg-white/88 shadow-[0_20px_55px_rgba(0,0,0,0.10)]">
-        <table className="min-w-[760px] text-left text-sm">
+        <div className="grid gap-3 p-4 md:hidden">
+          {displayedOrders.map((order) => (
+            <div key={order.id} className="rounded-[1.6rem] border border-[var(--border)] bg-white/72 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.05)]">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">{formatOrderReference(order.id)}</p>
+                  <p className="mt-2 font-semibold text-[var(--foreground)]">{order.customerName}</p>
+                  <p className="mt-1 text-sm text-[var(--muted)]">{order.email}</p>
+                </div>
+                <OrderStatusBadge status={order.status} />
+              </div>
+              <div className="mt-4 grid gap-2 text-sm text-[var(--muted)]">
+                <p><span className="font-medium text-[var(--foreground)]">Total:</span> {formatPrice(order.total)}</p>
+                <p><span className="font-medium text-[var(--foreground)]">Created:</span> {new Date(order.createdAt).toLocaleDateString()}</p>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  href={`/studio/orders/${order.id}`}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-[var(--border)] bg-white/78 px-3 py-2 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] shadow-[0_8px_16px_rgba(0,0,0,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-black/15 hover:bg-black hover:text-white hover:shadow-[0_14px_24px_rgba(0,0,0,0.12)]"
+                >
+                  <ViewIcon />
+                  View
+                </Link>
+                {(nextActions[order.status] ?? []).map((status) => (
+                  <Button
+                    key={status}
+                    variant="secondary"
+                    className="shrink-0 px-3 py-2 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] shadow-[0_8px_16px_rgba(0,0,0,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-black/15 hover:bg-black hover:text-white hover:shadow-[0_14px_24px_rgba(0,0,0,0.12)]"
+                    disabled={savingId === order.id}
+                    onClick={() => updateStatus(order.id, status)}
+                  >
+                    <ActionIcon status={status} />
+                    {getActionLabel(status)}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          ))}
+          {displayedOrders.length === 0 ? (
+            <div className="rounded-[1.6rem] border border-[var(--border)] bg-white/72 px-4 py-8 text-center text-sm text-[var(--muted)]">
+              No matching orders.
+            </div>
+          ) : null}
+        </div>
+        <table className="hidden min-w-[760px] text-left text-sm md:table">
           <thead className="bg-[var(--surface)]/78 text-[var(--muted)]">
             <tr>
               <th className="px-5 py-4">Reference</th>

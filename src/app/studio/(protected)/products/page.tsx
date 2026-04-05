@@ -54,21 +54,21 @@ export default function AdminProductsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted)]">Catalog</p>
-          <h1 className="display-font mt-3 text-4xl md:text-5xl">Manage products</h1>
+          <h1 className="display-font mt-3 text-3xl md:text-5xl">Manage products</h1>
         </div>
         <Link href="/studio/products/create" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-[0_12px_26px_rgba(0,0,0,0.28)] transition hover:brightness-95">Add product</Link>
       </div>
       <div className="grid gap-4">
         {products.map((product) => (
-          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-5 shadow-[0_16px_45px_rgba(0,0,0,0.08)] md:grid-cols-[100px_1fr_auto] md:items-center">
-            <div className="relative aspect-square overflow-hidden rounded-[1.25rem]">
+          <div key={product.id} className="grid gap-4 rounded-[2rem] border border-white/75 bg-white/88 p-4 shadow-[0_16px_45px_rgba(0,0,0,0.08)] sm:p-5 md:grid-cols-[100px_1fr_auto] md:items-center">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] md:aspect-square">
               <Image src={product.image || "/next.svg"} alt={product.name} fill className="object-cover" />
             </div>
             <div>
               <p className="text-xl font-semibold leading-snug">{product.name}</p>
               <p className="mt-2 text-sm text-[var(--muted)]">{product.category} - {formatPrice(product.price)} - Stock {product.inventory}</p>
             </div>
-            <Link href={`/studio/products/edit/${product.id}`} className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-sm font-semibold transition hover:bg-[var(--surface)]/75">Edit</Link>
+            <Link href={`/studio/products/edit/${product.id}`} className="rounded-full border border-[var(--border)] bg-white/70 px-4 py-3 text-center text-sm font-semibold transition hover:bg-[var(--surface)]/75 md:justify-self-end">Edit</Link>
           </div>
         ))}
       </div>
