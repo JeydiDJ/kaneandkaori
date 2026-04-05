@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import heroPerfume from "@/assets/hero-assets/hero-perfume.png";
+
 export const alt = "Kane & Kaori";
 export const contentType = "image/png";
 export const size = {
@@ -16,55 +18,166 @@ export default function OpenGraphImage() {
           height: "100%",
           width: "100%",
           background:
-            "radial-gradient(circle at top left, rgba(248,232,205,0.95), rgba(218,195,154,0.72) 35%, rgba(44,30,20,0.98) 100%)",
-          color: "#fff8ef",
-          padding: "72px",
+            "radial-gradient(circle at 14% 12%, rgba(255,255,255,0.92), transparent 28%), radial-gradient(circle at 92% 18%, rgba(113,112,108,0.16), transparent 24%), linear-gradient(180deg, #f3ede1 0%, #efe6d7 100%)",
+          color: "#18110b",
+          padding: "42px",
           position: "relative",
-          fontFamily: "serif",
+          overflow: "hidden",
+          fontFamily: "Georgia, serif",
         }}
       >
         <div
           style={{
             position: "absolute",
-            inset: "28px",
-            border: "1px solid rgba(255, 248, 239, 0.22)",
-            borderRadius: "36px",
+            inset: "18px",
+            border: "1px solid rgba(255,255,255,0.68)",
+            borderRadius: "34px",
+            background:
+              "linear-gradient(145deg, rgba(255,255,255,0.36), rgba(255,255,255,0.12))",
           }}
         />
+
         <div
           style={{
+            position: "absolute",
+            left: "-30px",
+            top: "32px",
+            width: "520px",
+            height: "520px",
+            borderRadius: "999px",
+            background: "radial-gradient(circle, rgba(255,255,255,0.66), rgba(255,255,255,0))",
+            filter: "blur(12px)",
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            right: "-40px",
+            top: "110px",
+            width: "260px",
+            height: "260px",
+            borderRadius: "999px",
+            background: "radial-gradient(circle, rgba(113,112,108,0.18), rgba(113,112,108,0))",
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            right: "-46px",
+            top: "-22px",
+            width: "610px",
+            height: "610px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: 0.32,
+            transform: "rotate(8deg)",
+          }}
+        >
+          <img
+            src={heroPerfume.src}
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              filter: "blur(5px) saturate(0.95)",
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             width: "100%",
-            zIndex: 1,
+            height: "100%",
+            padding: "18px 24px",
           }}
         >
           <div
             style={{
-              fontSize: 22,
+              display: "flex",
+              fontSize: 18,
               letterSpacing: 8,
               textTransform: "uppercase",
-              color: "rgba(255, 248, 239, 0.78)",
+              color: "#6f6d69",
             }}
           >
             Kane & Kaori
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 18, maxWidth: 760 }}>
-            <div style={{ fontSize: 82, lineHeight: 0.95 }}>Fragrance for becoming.</div>
-            <div style={{ fontSize: 28, lineHeight: 1.35, color: "rgba(255, 248, 239, 0.82)" }}>
-              Purposeful scents shaped by memory, ritual, and quiet transformation.
-            </div>
-          </div>
+
           <div
             style={{
-              fontSize: 22,
-              letterSpacing: 3,
-              textTransform: "uppercase",
-              color: "rgba(255, 248, 239, 0.7)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              maxWidth: 700,
             }}
           >
-            kaneandkaori.com
+            <div
+              style={{
+                display: "flex",
+                fontSize: 92,
+                lineHeight: 0.94,
+                color: "#16100b",
+              }}
+            >
+              Fragrance for
+              <br />
+              becoming.
+            </div>
+            <div
+              style={{
+                display: "flex",
+                maxWidth: 560,
+                fontSize: 28,
+                lineHeight: 1.35,
+                color: "#6f6d69",
+              }}
+            >
+              Purposeful scents shaped by memory, clarity, and everyday ritual.
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                padding: "14px 22px",
+                borderRadius: "999px",
+                background: "#3d3833",
+                color: "#f8f3eb",
+                fontSize: 18,
+                fontWeight: 600,
+                letterSpacing: 1.2,
+                textTransform: "uppercase",
+              }}
+            >
+              Explore the collection
+            </div>
+            <div
+              style={{
+                display: "flex",
+                fontSize: 18,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+                color: "#8f6c3f",
+              }}
+            >
+              kaneandkaori.com
+            </div>
           </div>
         </div>
       </div>
