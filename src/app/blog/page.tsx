@@ -7,14 +7,13 @@ import { getPublishedBlogPosts } from "@/services/blogService";
 export const metadata: Metadata = buildMetadata({
   title: "Blog | Kane & Kaori",
   description:
-    "Explore Kane & Kaori's editorial journal on marketing operations, launch strategy, fragrance storytelling, lifecycle campaigns, and growth systems.",
+    "Explore Kane & Kaori's editorial journal on fragrance, ritual, presence, and the details that shape how scent lives in everyday life.",
   path: "/blog",
   keywords: [
-    "marketing operations blog",
-    "fragrance marketing",
-    "launch strategy",
-    "lifecycle email",
-    "content operations",
+    "perfume blog",
+    "fragrance journal",
+    "perfume projection",
+    "fragrance ritual",
     "Kane and Kaori blog",
   ],
 });
@@ -39,7 +38,7 @@ export default async function BlogPage() {
     "@type": "Blog",
     name: "Kane & Kaori Blog",
     description:
-      "Editorial writing on marketing operations, launch strategy, fragrance storytelling, lifecycle campaigns, and growth systems.",
+      "Editorial writing on fragrance, ritual, presence, and the details that shape how scent lives in everyday life.",
     url: getAbsoluteUrl("/blog"),
     publisher: {
       "@type": "Organization",
@@ -83,14 +82,14 @@ export default async function BlogPage() {
             <div>
               <p className="text-xs uppercase tracking-[0.34em] text-[var(--muted)]">Journal</p>
               <h1 className="display-font mt-4 max-w-4xl text-5xl leading-[0.95] sm:text-6xl md:text-7xl">
-                Marketing operations,
+                Notes on fragrance,
                 <br />
-                published by the team.
+                ritual, and presence.
               </h1>
             </div>
           </div>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-            This is where Kane & Kaori translates strategy into story: launch planning, lifecycle campaigns, reporting rituals, and the operating systems that help a premium brand grow with intention.
+            The Kane & Kaori journal explores the details that shape fragrance in real life, from projection and wear to memory, mood, and everyday ritual.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {featuredPost ? (
@@ -105,7 +104,7 @@ export default async function BlogPage() {
               href="/contact"
               className="inline-flex min-h-13 items-center justify-center rounded-full border border-[#b99667] bg-transparent px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.08em] text-[#8f6c3f] transition-all duration-200 hover:border-[#cda87a] hover:bg-[#cda87a] hover:text-[#18110b] sm:px-7 sm:py-3"
             >
-              Talk growth strategy
+              Contact us
             </Link>
           </div>
         </div>
