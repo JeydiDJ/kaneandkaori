@@ -8,6 +8,38 @@ import logo from "@/assets/kaneandkaori-logo.png";
 import { routes } from "@/constants/routes";
 import { useCart } from "@/hooks/useCart";
 
+const socialLinks = [
+  {
+    href: "https://www.instagram.com/kaneandkaori_/",
+    label: "Instagram",
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+        <rect x="3.75" y="3.75" width="16.5" height="16.5" rx="4.5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    href: "https://www.tiktok.com/@kaneandkaori",
+    label: "TikTok",
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+        <path d="M14.2 3c.2 1.6 1.1 3.1 2.4 4.1 1 .8 2.2 1.2 3.4 1.3v3.1c-1.6-.1-3.1-.5-4.5-1.2v5.5c0 3.1-2.5 5.6-5.6 5.6S4.3 18.9 4.3 15.8s2.5-5.6 5.6-5.6c.3 0 .6 0 .9.1v3.2a2.5 2.5 0 1 0 1.9 2.4V3h1.5Z" />
+      </svg>
+    ),
+  },
+  {
+    href: "https://web.facebook.com/profile.php?id=61583758193943&_rdc=1&_rdr#",
+    label: "Facebook",
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+        <path d="M13.4 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.3-1.6 1.6-1.6h1.7V3.5c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.2H7.3V13H10v8h3.4Z" />
+      </svg>
+    ),
+  },
+] as const;
+
 export function Navbar() {
   const { itemCount } = useCart();
   const pathname = usePathname();
@@ -54,6 +86,21 @@ export function Navbar() {
               </Link>
             </>
           )}
+          <div className="hidden items-center gap-1 text-[var(--muted)] sm:flex">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={link.label}
+                title={link.label}
+                className="inline-flex h-9 w-9 items-center justify-center text-[var(--muted)] transition duration-200 hover:-translate-y-px hover:text-[var(--foreground)]"
+              >
+                {link.icon}
+              </a>
+            ))}
+          </div>
         </nav>
       </div>
     </header>
