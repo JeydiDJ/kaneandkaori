@@ -8,6 +8,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase";
 
 const links = [
   { href: "/studio", label: "Dashboard" },
+  { href: "/studio/blog", label: "Blog" },
   { href: "/studio/products", label: "Products" },
   { href: "/studio/orders", label: "Orders" },
   { href: "/studio/reports", label: "Reports" },
@@ -16,6 +17,14 @@ const links = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+
+  function isActive(href: string) {
+    if (href === "/studio") {
+      return pathname === href;
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowserClient();
@@ -33,7 +42,7 @@ export function AdminSidebar() {
           <Link
             key={link.href}
             href={link.href}
-            className={`shrink-0 rounded-2xl px-4 py-3 font-medium transition xl:shrink ${pathname === link.href ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[0_12px_28px_rgba(0,0,0,0.25)]" : "bg-white/45 hover:bg-[var(--surface)]/75"}`}
+            className={`shrink-0 rounded-2xl px-4 py-3 font-medium transition xl:shrink ${isActive(link.href) ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[0_12px_28px_rgba(0,0,0,0.25)]" : "bg-white/45 hover:bg-[var(--surface)]/75"}`}
           >
             {link.label}
           </Link>

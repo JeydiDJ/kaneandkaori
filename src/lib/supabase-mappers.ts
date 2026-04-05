@@ -1,3 +1,4 @@
+import type { BlogPost } from "@/types/blog";
 import type { Order, OrderItem, OrderStatus } from "@/types/order";
 import type { Product } from "@/types/product";
 
@@ -44,6 +45,24 @@ type OrderRow = {
   total_amount: number | string;
   created_at: string;
   order_items?: OrderItemRow[];
+};
+
+type BlogPostRow = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string | null;
+  cover_image_url: string | null;
+  category: string | null;
+  author_name: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  is_published: boolean;
+  featured: boolean;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 function parseNotes(value: string | null) {
@@ -103,5 +122,25 @@ export function mapOrderRow(row: OrderRow): Order {
     total: Number(row.total_amount),
     status: row.status,
     createdAt: row.created_at,
+  };
+}
+
+export function mapBlogPostRow(row: BlogPostRow): BlogPost {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    excerpt: row.excerpt ?? "",
+    content: row.content ?? "",
+    coverImage: row.cover_image_url ?? "",
+    category: row.category ?? "",
+    authorName: row.author_name ?? "Kane & Kaori",
+    seoTitle: row.seo_title ?? "",
+    seoDescription: row.seo_description ?? "",
+    isPublished: row.is_published,
+    featured: row.featured,
+    publishedAt: row.published_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   };
 }

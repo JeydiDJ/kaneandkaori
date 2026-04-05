@@ -7,6 +7,7 @@ const IKIGAI = "Ikigai (\u751f\u304d\u7532\u6590)";
 const KAIZEN = "Kaizen (\u6539\u5584)";
 
 const links = [
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/shipping", label: "Shipping" },
   { href: "/returns", label: "Returns" },

@@ -23,6 +23,9 @@ export function Navbar() {
           </span>
         </Link>
         <nav className="flex items-center gap-1 text-xs text-[var(--muted)] sm:text-sm md:gap-3">
+          <Link href={routes.blog} className="rounded-full px-2 py-1.5 transition hover:bg-white/35 hover:text-[var(--foreground)] sm:px-3 sm:py-2">
+            Blog
+          </Link>
           <Link href={routes.products} className="rounded-full px-2 py-1.5 transition hover:bg-white/35 hover:text-[var(--foreground)] sm:px-3 sm:py-2">
             Shop
           </Link>
