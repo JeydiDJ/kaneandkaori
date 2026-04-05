@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import heroPerfume from "@/assets/hero-assets/hero-perfume.png";
+import { getAbsoluteUrl } from "@/lib/seo";
 
 export const alt = "Kane & Kaori";
 export const contentType = "image/png";
@@ -10,6 +11,8 @@ export const size = {
 };
 
 export default function OpenGraphImage() {
+  const heroPerfumeUrl = getAbsoluteUrl(heroPerfume.src);
+
   return new ImageResponse(
     (
       <div
@@ -77,7 +80,7 @@ export default function OpenGraphImage() {
           }}
         >
           <img
-            src={heroPerfume.src}
+            src={heroPerfumeUrl}
             alt=""
             style={{
               width: "100%",
