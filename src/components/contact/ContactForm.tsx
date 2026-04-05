@@ -91,9 +91,6 @@ export function ContactForm() {
         placeholder="Tell us about your order question, fragrance inquiry, or partnership request."
         required
       />
-      <p className="text-xs text-[var(--muted)]">
-        This form sends through EmailJS. Make sure your template variables include `name`, `email`, `subject`, `message`, and `time`.
-      </p>
       <Button type="submit" disabled={loading}>
         {loading ? "Sending..." : "Send message"}
       </Button>
