@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from "next";
 
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 import favicon from "@/assets/favicon.ico";
 import { Footer } from "@/components/layout/Footer";
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Footer />
           </div>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );
