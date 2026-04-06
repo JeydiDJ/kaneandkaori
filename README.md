@@ -300,9 +300,9 @@ public                     Public static assets
 
 The application relies on a central commerce and content schema covering products, orders, order items, blog posts, and admin profiles.
 
-For the blog feature, the related table definition is documented in [docs/blog_posts.sql](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/blog_posts.sql).
+For the blog feature, the related table definition is documented in [docs/blog_posts.sql](https://github.com/JeydiDJ/kaneandkaori/blob/main/docs/blog_posts.sql).
 
-For a quick view of how the main entities connect, see the ERD in [docs/database-erd.md](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/database-erd.md).
+For a quick view of how the main entities connect, see the ERD in [docs/database-erd.md](https://github.com/JeydiDJ/kaneandkaori/blob/main/docs/database-erd.md).
 
 ### Database ERD
 
@@ -506,7 +506,7 @@ flowchart TD
 
 ## Website Flow
 
-The full storefront and studio journey is documented in [docs/website-flowchart.md](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/website-flowchart.md).
+The full storefront and studio journey is documented in [docs/website-flowchart.md](https://github.com/JeydiDJ/kaneandkaori/blob/main/docs/website-flowchart.md).
 
 ## Purpose
 
