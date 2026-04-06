@@ -155,6 +155,89 @@ The app expects Supabase tables for products, orders, admin access, and blog pos
 
 For a quick view of how the main entities connect, see the ERD in [docs/database-erd.md](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/database-erd.md).
 
+### Database ERD
+
+```mermaid
+erDiagram
+    PROFILES {
+        uuid id PK
+        text email
+        text full_name
+        text role
+        timestamptz created_at
+    }
+
+    PRODUCTS {
+        uuid id PK
+        text name
+        text slug
+        text description
+        numeric price
+        integer inventory
+        text category
+        text notes
+        text image_url
+        boolean featured
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    ORDERS {
+        uuid id PK
+        text customer_name
+        text email
+        text phone
+        text address_line
+        text barangay
+        text city_municipality
+        text province
+        text postal_code
+        text country
+        text payment_method
+        text payment_reference
+        text notes
+        text status
+        numeric subtotal
+        numeric shipping_fee
+        numeric total_amount
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    ORDER_ITEMS {
+        uuid id PK
+        uuid order_id FK
+        uuid product_id FK
+        text product_name
+        numeric price
+        integer quantity
+        numeric line_total
+        timestamptz created_at
+    }
+
+    BLOG_POSTS {
+        uuid id PK
+        text title
+        text slug
+        text excerpt
+        text content
+        text cover_image_url
+        text category
+        text author_name
+        text seo_title
+        text seo_description
+        boolean is_published
+        boolean featured
+        timestamptz published_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    ORDERS ||--o{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : appears_in
+```
+
 ### Storage
 
 Create a public Supabase Storage bucket named `blog-images`.
@@ -249,7 +332,7 @@ flowchart TD
 
     BA --> BB[View featured and recent published posts]
     BB --> BC{Choose an article?}
-    BC -->|Yes| BD[Open /blog/[slug]]
+    BC -->|Yes| BD[Open blog post route]
     BC -->|No| BA
     BD --> BE[Read article, metadata, and structured content]
 
