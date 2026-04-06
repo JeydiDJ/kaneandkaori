@@ -68,6 +68,79 @@ This project currently supports three main surfaces:
 - Resend for order and contact notifications
 - EmailJS for the public contact form
 
+### Why this stack
+
+- `Next.js App Router` provides the public website, protected studio routes, API routes, metadata generation, and server-rendered content in one application
+- `React` powers the interactive parts of the storefront and studio, especially cart state, forms, and dashboard workflows
+- `TypeScript` keeps shared types consistent across pages, services, API routes, and admin tooling
+- `Tailwind CSS` supports the custom brand presentation without introducing a separate component framework
+- `Supabase` acts as the application backend for authentication, relational data, and blog image storage
+- `Resend` is used for operational email delivery tied to orders and contact submissions
+- `EmailJS` supports the public-facing contact form workflow from the client side
+
+## Architecture
+
+The application is structured as a single Next.js codebase with three major domains:
+
+- Public commerce experience
+- Protected studio operations
+- Editorial publishing
+
+At a high level, the architecture follows this pattern:
+
+1. App Router pages define route entry points, layouts, metadata, and server-rendered views
+2. Components handle presentation and interactive UI behavior
+3. Services encapsulate server-side data fetching and business-oriented read logic
+4. API routes handle mutations such as checkout, admin CRUD actions, and order status updates
+5. Shared libraries centralize infrastructure concerns such as Supabase access, auth checks, SEO helpers, inventory logic, and email formatting
+6. Shared types define the application contracts used across UI and server code
+
+### Architectural principles in this codebase
+
+- Public read flows are generally handled through server components and service functions
+- Sensitive operations use server-side Supabase clients backed by the service role key
+- Admin mutations are routed through authenticated API endpoints rather than called directly from the browser
+- Shared mappers and types normalize Supabase rows into application-friendly objects
+- SEO is treated as a first-class concern through shared metadata helpers and structured data generation
+
+## How Development Is Organized
+
+This codebase separates responsibility by user journey and runtime boundary.
+
+### Development workflow
+
+- New public experiences are typically introduced as route segments in `src/app` and composed from feature components in `src/components`
+- Shared reads should be added to `src/services` so pages and routes can reuse the same query logic
+- Shared infrastructure concerns belong in `src/lib` rather than inside page files
+- New admin mutations should be exposed through protected API routes and called from studio components
+- Domain shapes should be captured in `src/types` before being reused across UI and server code
+
+### Public product and blog reads
+
+- Product and blog pages primarily use server-side rendering
+- Data is fetched through service modules such as [src/services/productService.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/services/productService.ts) and [src/services/blogService.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/services/blogService.ts)
+- Slug-based lookups are supported for both products and blog posts, with UUID fallback where needed
+
+### Checkout and order operations
+
+- The customer checkout UI collects order information on the frontend
+- Order creation happens in the checkout API route, not directly in a page component
+- Inventory validation occurs before the order is written
+- Follow-up lifecycle changes such as status updates and inventory release/reservation are handled through admin-facing route handlers
+
+### Admin workflows
+
+- Studio pages provide the UI layer for operations
+- Admin access is validated with bearer-token checks against Supabase auth and the `profiles` table
+- Browser-based admin forms call protected API routes for create, update, and delete actions
+- Read-heavy reporting logic is centralized in analytics services rather than embedded in page components
+
+### Client-side state
+
+- Long-lived browser state is intentionally limited
+- The main shared client state is the cart, implemented through [src/hooks/useCart.tsx](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/hooks/useCart.tsx)
+- Cart persistence uses local storage so customers can continue browsing without losing selections
+
 ## Project Structure
 
 ```text
@@ -81,6 +154,101 @@ data                       Local JSON seed-style data used in development
 docs                       Supporting SQL and project documentation
 public                     Public static assets
 ```
+
+### Directory responsibilities
+
+- `src/app`
+  Contains route segments, layouts, route-level metadata, and API route handlers. This is the routing backbone of the application.
+- `src/components`
+  Contains reusable UI building blocks and feature-level components for storefront, checkout, cart, contact, admin, and layout concerns.
+- `src/hooks`
+  Contains client-side state helpers. At present this is most notably the cart context and related helpers.
+- `src/lib`
+  Contains shared infrastructure code such as Supabase clients, admin auth checks, inventory logic, email formatting/sending, SEO helpers, and row mappers.
+- `src/services`
+  Contains server-oriented data access and reporting logic used by routes and pages.
+- `src/types`
+  Contains the main domain types for products, orders, blog posts, users, and admin analytics.
+- `docs`
+  Contains supporting reference material such as SQL and diagrams.
+- `data`
+  Contains local JSON development data used during earlier or offline-friendly development paths.
+
+## Codebase Reference
+
+### Routing and rendering
+
+- Public pages live in `src/app` and are grouped by route
+- Studio routes live under `src/app/studio`
+- Protected studio routes live in `src/app/studio/(protected)`
+- API routes live alongside pages in `src/app/api`
+- Layout composition starts in [src/app/layout.tsx](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/app/layout.tsx)
+
+### Services and business logic
+
+- [src/services/productService.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/services/productService.ts)
+  Handles public product reads and featured product selection
+- [src/services/orderService.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/services/orderService.ts)
+  Handles admin-side order reads, including joined order items
+- [src/services/blogService.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/services/blogService.ts)
+  Handles published blog listing and single-post lookup
+- [src/services/adminAnalytics.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/services/adminAnalytics.ts)
+  Computes dashboard metrics, sales trends, status breakdowns, inventory reports, and top products
+
+### Shared infrastructure
+
+- [src/lib/supabase.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/lib/supabase.ts)
+  Creates browser, server, and admin Supabase clients
+- [src/lib/admin-auth.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/lib/admin-auth.ts)
+  Verifies admin requests against Supabase Auth and the `profiles` table
+- [src/lib/email.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/lib/email.ts)
+  Builds and sends order and contact notification emails
+- [src/lib/seo.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/lib/seo.ts)
+  Centralizes metadata and absolute URL generation
+- [src/lib/supabase-mappers.ts](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/src/lib/supabase-mappers.ts)
+  Maps Supabase rows into app-level types
+
+### UI modules
+
+- `src/components/layout`
+  Site shell components such as the main navigation and footer
+- `src/components/products`
+  Product browsing and detail presentation
+- `src/components/cart`
+  Cart list and summary presentation
+- `src/components/checkout`
+  Checkout form flow and submission UI
+- `src/components/contact`
+  Contact form components
+- `src/components/admin`
+  Admin dashboard panels, data tables, forms, badges, and protected studio UI
+
+## Development Conventions
+
+### Data access conventions
+
+- Use service modules for server-side reads instead of embedding queries across multiple pages
+- Use API routes for mutations and protected admin actions
+- Use the admin Supabase client only when elevated privileges are required
+- Keep row-to-type transformation logic in shared mapper utilities
+
+### Auth conventions
+
+- Public storefront and blog content do not require authentication
+- Studio access requires a valid authenticated user with an `admin` role in `profiles`
+- Admin APIs expect an authorization bearer token and verify both user identity and role
+
+### Content conventions
+
+- Product and blog routes support human-friendly slugs
+- Blog posts remain hidden from the public site until `is_published` is true
+- Featured flags are used to influence storefront and blog ordering
+
+### Operational conventions
+
+- Order states are modeled explicitly to support fulfillment tracking
+- Inventory is treated as part of order operations, not only product editing
+- Notification emails are tied to key order lifecycle events
 
 ## Important Routes
 
@@ -104,54 +272,35 @@ public                     Public static assets
 - `/studio/reports` reports
 - `/studio/blog` blog management
 
-## Environment Variables
+## Platform Integrations
 
-Create a `.env.local` file in the project root.
+### Supabase
 
-### Required for core app
+- Stores the core commerce and editorial data for products, orders, order items, blog posts, and admin profiles
+- Supports admin authentication for protected studio access
+- Hosts the `blog-images` storage bucket used for blog cover uploads
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-```
+### Resend
 
-`NEXT_PUBLIC_SUPABASE_ANON_KEY` can be used instead of `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY` if that matches your Supabase project setup.
+- Sends order notifications to the business
+- Sends customer-facing order status updates during fulfillment
+- Supports server-side contact notifications
 
-### Required for email notifications
+### EmailJS
 
-```env
-RESEND_API_KEY=
-ORDER_NOTIFICATION_EMAIL=
-```
+- Powers the public contact form submission flow from the website frontend
 
-### Optional but recommended
+### SEO and Search Visibility
 
-```env
-ORDER_FROM_EMAIL=
-CONTACT_NOTIFICATION_EMAIL=
-NEXT_PUBLIC_SITE_URL=
-NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
-NEXT_PUBLIC_BING_SITE_VERIFICATION=
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
-```
+- Supports canonical URLs and absolute metadata URLs for the main site and blog
+- Includes structured data for organization, website, blog index, and individual blog articles
+- Supports Google and Bing site verification values for search tooling
 
-Notes:
+## Data Model
 
-- `SUPABASE_SERVICE_ROLE_KEY` is required for server-side order creation, inventory updates, and blog queries
-- `RESEND_API_KEY` is required for order and contact notification emails sent from server routes
-- `ORDER_FROM_EMAIL` should use a verified Resend sender domain in production
-- `CONTACT_NOTIFICATION_EMAIL` falls back to `ORDER_NOTIFICATION_EMAIL` if omitted
-- `NEXT_PUBLIC_SITE_URL` is used for canonical URLs and absolute metadata URLs
-- The EmailJS keys are required for the browser-based contact form submission flow
+The application relies on a central commerce and content schema covering products, orders, order items, blog posts, and admin profiles.
 
-## Supabase Setup
-
-### Database
-
-The app expects Supabase tables for products, orders, admin access, and blog posts. For the blog feature, run the SQL in [docs/blog_posts.sql](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/blog_posts.sql) to create the `blog_posts` table and its `updated_at` trigger.
+For the blog feature, the related table definition is documented in [docs/blog_posts.sql](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/blog_posts.sql).
 
 For a quick view of how the main entities connect, see the ERD in [docs/database-erd.md](/D:/Passion%20Projects/KaneandKaori/kaneandkaori/docs/database-erd.md).
 
@@ -240,27 +389,7 @@ erDiagram
 
 ### Storage
 
-Create a public Supabase Storage bucket named `blog-images`.
-
-The studio blog editor uploads cover images into that bucket and stores the returned public URL on each post.
-
-## Local Development
-
-Install dependencies and start the dev server:
-
-```bash
-npm install
-npm run dev
-```
-
-Then open [http://localhost:3000](http://localhost:3000).
-
-## Available Scripts
-
-- `npm run dev` starts the local development server
-- `npm run build` creates a production build
-- `npm run start` runs the production build locally
-- `npm run lint` runs ESLint
+The blog editor uploads cover images into the `blog-images` bucket and stores the returned public URL on each post.
 
 ## Operational Notes
 
