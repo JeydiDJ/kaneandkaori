@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { ImageResponse } from "next/og";
 
 import heroPerfume from "@/assets/hero-assets/hero-perfume.png";
@@ -9,7 +12,12 @@ export const size = {
   height: 630,
 };
 
-export default function OpenGraphImage() {
+export default async function OpenGraphImage() {
+  const heroPerfumeBuffer = await readFile(
+    join(process.cwd(), "src", "assets", "hero-assets", "hero-perfume.png"),
+  );
+  const heroPerfumeUrl = `data:image/png;base64,${heroPerfumeBuffer.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -77,7 +85,7 @@ export default function OpenGraphImage() {
           }}
         >
           <img
-            src={heroPerfume.src}
+            src={heroPerfumeUrl}
             alt=""
             width={heroPerfume.width}
             height={heroPerfume.height}
