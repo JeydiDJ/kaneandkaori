@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { buildMetadata, getAbsoluteUrl } from "@/lib/seo";
 import { getPublishedBlogPostBySlug, getPublishedBlogPosts } from "@/services/blogService";
 
+export const dynamic = "force-dynamic";
+
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -25,11 +27,6 @@ function buildParagraphs(content: string) {
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
-}
-
-export async function generateStaticParams() {
-  const posts = await getPublishedBlogPosts();
-  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {

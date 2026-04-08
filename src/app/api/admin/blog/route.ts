@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { isAdminRequest } from "@/lib/admin-auth";
@@ -45,6 +46,10 @@ export async function POST(request: Request) {
     if (error) {
       throw new Error(error.message);
     }
+
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${data.slug}`);
+    revalidatePath("/sitemaps/blog.xml");
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {

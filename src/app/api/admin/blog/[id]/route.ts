@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { isAdminRequest } from "@/lib/admin-auth";
@@ -41,6 +42,16 @@ export async function PATCH(request: Request, context: RouteContext) {
     const { id } = await context.params;
     const payload = await request.json();
     const supabase = createSupabaseAdminClient();
+    const { data: existingPost, error: existingPostError } = await supabase
+      .from("blog_posts")
+      .select("slug")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (existingPostError) {
+      throw new Error(existingPostError.message);
+    }
+
     const { data, error } = await supabase
       .from("blog_posts")
       .update(payload)
@@ -51,6 +62,13 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (error || !data) {
       throw new Error(error?.message ?? "Blog post not found.");
     }
+
+    revalidatePath("/blog");
+    if (existingPost?.slug && existingPost.slug !== data.slug) {
+      revalidatePath(`/blog/${existingPost.slug}`);
+    }
+    revalidatePath(`/blog/${data.slug}`);
+    revalidatePath("/sitemaps/blog.xml");
 
     return NextResponse.json(data);
   } catch (error) {
@@ -67,11 +85,27 @@ export async function DELETE(request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
     const supabase = createSupabaseAdminClient();
+    const { data: existingPost, error: existingPostError } = await supabase
+      .from("blog_posts")
+      .select("slug")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (existingPostError) {
+      throw new Error(existingPostError.message);
+    }
+
     const { error } = await supabase.from("blog_posts").delete().eq("id", id);
 
     if (error) {
       throw new Error(error.message);
     }
+
+    revalidatePath("/blog");
+    if (existingPost?.slug) {
+      revalidatePath(`/blog/${existingPost.slug}`);
+    }
+    revalidatePath("/sitemaps/blog.xml");
 
     return NextResponse.json({ success: true });
   } catch (error) {

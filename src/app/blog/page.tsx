@@ -4,6 +4,8 @@ import Link from "next/link";
 import { buildMetadata, getAbsoluteUrl } from "@/lib/seo";
 import { getPublishedBlogPosts } from "@/services/blogService";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = buildMetadata({
   title: "Blog | Kane & Kaori",
   description:
