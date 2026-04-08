@@ -18,7 +18,7 @@ export type SitemapEntry = {
 };
 
 export type SitemapDocument = {
-  slug: string;
+  path: string;
   updatedAt: string;
   entries: SitemapEntry[];
 };
@@ -104,7 +104,7 @@ export async function getSitemapDocuments(): Promise<SitemapDocument[]> {
 
   const documents: SitemapDocument[] = [
     {
-      slug: "pages",
+      path: "/sitemaps/pages.xml",
       updatedAt: fallbackDate,
       entries: staticRoutes.map((entry) => ({
         ...entry,
@@ -113,38 +113,34 @@ export async function getSitemapDocuments(): Promise<SitemapDocument[]> {
     },
   ];
 
-  const productChunks = chunkEntries(products, SITEMAP_CHUNK_SIZE);
-  productChunks.forEach((chunk, index) => {
-    documents.push({
-      slug: `products-${index + 1}`,
-      updatedAt: getLatestTimestamp(
-        chunk.map((product) => product.updatedAt ?? product.createdAt),
-        fallbackDate,
-      ),
-      entries: chunk.map((product) => ({
-        url: `/products/${product.slug}`,
-        lastModified: product.updatedAt ?? product.createdAt,
-        changeFrequency: "weekly",
-        priority: 0.9,
-      })),
-    });
+  const productChunks = chunkEntries(products, SITEMAP_CHUNK_SIZE).flat();
+  documents.push({
+    path: "/sitemaps/products.xml",
+    updatedAt: getLatestTimestamp(
+      productChunks.map((product) => product.updatedAt ?? product.createdAt),
+      fallbackDate,
+    ),
+    entries: productChunks.map((product) => ({
+      url: `/products/${product.slug}`,
+      lastModified: product.updatedAt ?? product.createdAt,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    })),
   });
 
-  const postChunks = chunkEntries(posts, SITEMAP_CHUNK_SIZE);
-  postChunks.forEach((chunk, index) => {
-    documents.push({
-      slug: `blog-${index + 1}`,
-      updatedAt: getLatestTimestamp(
-        chunk.map((post) => post.updatedAt ?? post.publishedAt ?? post.createdAt),
-        fallbackDate,
-      ),
-      entries: chunk.map((post) => ({
-        url: `/blog/${post.slug}`,
-        lastModified: post.updatedAt ?? post.publishedAt ?? post.createdAt,
-        changeFrequency: "monthly",
-        priority: 0.7,
-      })),
-    });
+  const postChunks = chunkEntries(posts, SITEMAP_CHUNK_SIZE).flat();
+  documents.push({
+    path: "/sitemaps/blog.xml",
+    updatedAt: getLatestTimestamp(
+      postChunks.map((post) => post.updatedAt ?? post.publishedAt ?? post.createdAt),
+      fallbackDate,
+    ),
+    entries: postChunks.map((post) => ({
+      url: `/blog/${post.slug}`,
+      lastModified: post.updatedAt ?? post.publishedAt ?? post.createdAt,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    })),
   });
 
   return documents;
@@ -158,7 +154,7 @@ export function buildSitemapIndexXml(documents: SitemapDocument[], baseUrl: stri
   const body = documents
     .map(
       (document) => `  <sitemap>
-    <loc>${escapeXml(toAbsoluteUrl(`/sitemaps/${document.slug}.xml`, baseUrl))}</loc>
+    <loc>${escapeXml(toAbsoluteUrl(document.path, baseUrl))}</loc>
     <lastmod>${escapeXml(document.updatedAt)}</lastmod>
   </sitemap>`,
     )
