@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export async function GET(
-  _: Request,
+  request: Request,
   context: { params: Promise<Record<string, string | string[] | undefined>> },
 ) {
   const params = await context.params;
@@ -25,7 +25,8 @@ export async function GET(
     });
   }
 
-  const xml = buildSitemapXml(document.entries);
+  const baseUrl = new URL(request.url).origin;
+  const xml = buildSitemapXml(document.entries, baseUrl);
 
   return new Response(xml, {
     headers: {

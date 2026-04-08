@@ -1,4 +1,3 @@
-import { getSiteUrl } from "@/lib/seo";
 import { getPublishedBlogPosts } from "@/services/blogService";
 import { getProducts } from "@/services/productService";
 
@@ -72,10 +71,6 @@ const staticRoutes: SitemapEntry[] = [
   },
 ];
 
-function toAbsoluteUrl(path: string) {
-  return new URL(path, getSiteUrl()).toString();
-}
-
 function escapeXml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -113,7 +108,6 @@ export async function getSitemapDocuments(): Promise<SitemapDocument[]> {
       updatedAt: fallbackDate,
       entries: staticRoutes.map((entry) => ({
         ...entry,
-        url: toAbsoluteUrl(entry.url),
         lastModified: fallbackDate,
       })),
     },
@@ -128,7 +122,7 @@ export async function getSitemapDocuments(): Promise<SitemapDocument[]> {
         fallbackDate,
       ),
       entries: chunk.map((product) => ({
-        url: toAbsoluteUrl(`/products/${product.slug}`),
+        url: `/products/${product.slug}`,
         lastModified: product.updatedAt ?? product.createdAt,
         changeFrequency: "weekly",
         priority: 0.9,
@@ -145,7 +139,7 @@ export async function getSitemapDocuments(): Promise<SitemapDocument[]> {
         fallbackDate,
       ),
       entries: chunk.map((post) => ({
-        url: toAbsoluteUrl(`/blog/${post.slug}`),
+        url: `/blog/${post.slug}`,
         lastModified: post.updatedAt ?? post.publishedAt ?? post.createdAt,
         changeFrequency: "monthly",
         priority: 0.7,
@@ -156,11 +150,15 @@ export async function getSitemapDocuments(): Promise<SitemapDocument[]> {
   return documents;
 }
 
-export function buildSitemapIndexXml(documents: SitemapDocument[]) {
+function toAbsoluteUrl(path: string, baseUrl: string) {
+  return new URL(path, baseUrl).toString();
+}
+
+export function buildSitemapIndexXml(documents: SitemapDocument[], baseUrl: string) {
   const body = documents
     .map(
       (document) => `  <sitemap>
-    <loc>${escapeXml(toAbsoluteUrl(`/sitemaps/${document.slug}.xml`))}</loc>
+    <loc>${escapeXml(toAbsoluteUrl(`/sitemaps/${document.slug}.xml`, baseUrl))}</loc>
     <lastmod>${escapeXml(document.updatedAt)}</lastmod>
   </sitemap>`,
     )
@@ -172,11 +170,11 @@ ${body}
 </sitemapindex>`;
 }
 
-export function buildSitemapXml(entries: SitemapEntry[]) {
+export function buildSitemapXml(entries: SitemapEntry[], baseUrl: string) {
   const body = entries
     .map(
       (entry) => `  <url>
-    <loc>${escapeXml(entry.url)}</loc>
+    <loc>${escapeXml(toAbsoluteUrl(entry.url, baseUrl))}</loc>
     ${entry.lastModified ? `<lastmod>${escapeXml(new Date(entry.lastModified).toISOString())}</lastmod>` : ""}
     ${entry.changeFrequency ? `<changefreq>${entry.changeFrequency}</changefreq>` : ""}
     ${typeof entry.priority === "number" ? `<priority>${entry.priority.toFixed(1)}</priority>` : ""}

@@ -3,9 +3,10 @@ import { buildSitemapIndexXml, getSitemapDocuments } from "@/lib/sitemap";
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
-export async function GET() {
+export async function GET(request: Request) {
   const documents = await getSitemapDocuments();
-  const xml = buildSitemapIndexXml(documents);
+  const baseUrl = new URL(request.url).origin;
+  const xml = buildSitemapIndexXml(documents, baseUrl);
 
   return new Response(xml, {
     headers: {
