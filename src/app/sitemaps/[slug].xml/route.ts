@@ -8,7 +8,8 @@ export async function GET(
   context: { params: Promise<Record<string, string | string[] | undefined>> },
 ) {
   const params = await context.params;
-  const slug = typeof params.slug === "string" ? params.slug : undefined;
+  const slugValue = typeof params.slug === "string" ? params.slug : undefined;
+  const slug = slugValue?.endsWith(".xml") ? slugValue.slice(0, -4) : slugValue;
 
   if (!slug) {
     return new Response("Not found", {
